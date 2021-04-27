@@ -19,7 +19,7 @@ public class Main extends Canvas implements Runnable{
     private final int width = 600; //Dimensions for playing area
     private final int height = 600;
 
-
+    public ArrayList<gridSpace> grids = new ArrayList<>();
 
     private boolean isRunning;
 
@@ -39,6 +39,24 @@ public class Main extends Canvas implements Runnable{
         frame.setVisible(true);
 
         isRunning = false;
+
+        createGrid();
+    }
+
+    private void createGrid() {
+        int posX = 0;
+        int posY = 0;
+        for (int i = 0;i < 64; i++) {
+            grids.add(new gridSpace(new Rectangle(50,50)));
+            grids.get(i).Hitbox.x = 100 + posX;
+            grids.get(i).Hitbox.y = 100 + posY;
+            if (posX >= 350) {
+                posX = 0;
+                posY += 50;
+            } else {
+                posX += 50;
+            }
+        }
     }
 
     public void update() {
@@ -54,10 +72,17 @@ public class Main extends Canvas implements Runnable{
         Graphics g = bs.getDrawGraphics();
 
         g.drawRect(100,100,50*8,50*8);
+        drawGrids(g);
 
 
         g.dispose();
         bs.show();
+    }
+
+    private void drawGrids(Graphics g) {
+        for (int i = 0;i < grids.size(); i++) {
+            g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
+        }
     }
 
     public static void main(String[] args) {
