@@ -19,6 +19,8 @@ public class Main extends Canvas implements Runnable{
     private final int width = 600; //Dimensions for playing area
     private final int height = 600;
 
+
+
     private boolean isRunning;
 
     private Thread thread;
@@ -52,7 +54,6 @@ public class Main extends Canvas implements Runnable{
         Graphics g = bs.getDrawGraphics();
 
         g.drawRect(100,100,50*8,50*8);
-        g.drawRect(100,100,50,50);
 
 
         g.dispose();
