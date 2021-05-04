@@ -19,7 +19,7 @@ public class Main extends Canvas implements Runnable{
     private final int width = 600; //Dimensions for playing area
     private final int height = 600;
 
-    private Rectangle player = new Rectangle();
+    private final Rectangle player = new Rectangle();
 
     public ArrayList<gridSpace> grids = new ArrayList<>();
 
