@@ -21,6 +21,8 @@ public class Main extends Canvas implements Runnable{
 
     private final Rectangle player = new Rectangle();
 
+    private int playerPos;
+
     public ArrayList<gridSpace> grids = new ArrayList<>();
 
     private boolean isRunning;
@@ -67,6 +69,8 @@ public class Main extends Canvas implements Runnable{
     }
 
     public void update() {
+        player.x = grids.get(playerPos).getHitbox().x;
+        player.y = grids.get(playerPos).getHitbox().y;
 
     }
 
@@ -145,30 +149,30 @@ public class Main extends Canvas implements Runnable{
         public void keyTyped(KeyEvent keyEvent) {
             if (keyEvent.getKeyChar() == 'd') {
                 if (player.x >= 450) {
-                    player.x = 100;
+                    playerPos -= 7;
                 } else {
-                    player.x += 50;
+                    playerPos++;
                 }
             }
             if (keyEvent.getKeyChar() == 'a') {
                 if (player.x <= 100) {
-                    player.x = 450;
+                    playerPos += 7;
                 } else {
-                    player.x -= 50;
+                    playerPos--;
                 }
             }
             if (keyEvent.getKeyChar() == 'w') {
                 if (player.y <= 100) {
-                    player.y = 450;
+                    playerPos += 56;
                 } else {
-                    player.y -= 50;
+                    playerPos -= 8;
                 }
             }
             if (keyEvent.getKeyChar() == 's') {
                 if (player.y >= 450) {
-                    player.y = 100;
+                    playerPos -= 56;
                 } else {
-                    player.y += 50;
+                    playerPos += 8;
                 }
             }
         }
