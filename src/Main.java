@@ -185,8 +185,13 @@ public class Main extends Canvas implements Runnable{
 
     private void drawGrids(Graphics g) { //draws all previously made grids
         for (int i = 0;i < grids.size(); i++) {
+            g.setColor(new Color(156,55,8));
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
-            if (grids.get(i).hasBoat) {
+            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit) {
+                g.setColor(Color.blue);
+                g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
+            } else if (grids.get(i).hasBeenHit) {
+                g.setColor(Color.black);
                 g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
             }
         }
@@ -265,6 +270,11 @@ public class Main extends Canvas implements Runnable{
                     grids.get(i).hasBoat = false;
                 }
                 createBoats(grids);
+            }
+            if (keyEvent.getKeyChar() == ' ') {
+                if (!grids.get(playerPos).hasBeenHit) {
+                    grids.get(playerPos).hit();
+                }
             }
         }
 

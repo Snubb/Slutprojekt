@@ -3,6 +3,7 @@ import java.awt.*;
 public class gridSpace {
     public Rectangle Hitbox;
     public boolean hasBoat = false;
+    public boolean hasBeenHit = false;
 
     public gridSpace(Rectangle Hitbox) {
         this.Hitbox = Hitbox;
@@ -14,6 +15,10 @@ public class gridSpace {
 
     public void hasBoat() {
         this.hasBoat = true;
+    }
+
+    public void hit() {
+        this.hasBeenHit = true;
     }
 
     public Rectangle getHitbox() {

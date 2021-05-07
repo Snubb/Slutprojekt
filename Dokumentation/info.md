@@ -20,4 +20,4 @@ Skrapade musen, nu används wasd istället. hasBoat variabel inuti fyrkanterna v
 Mer planering:  
 När man skjuter kollar spelet om den fyrkanten man är i har en båt. Om det har en så träffar man. Om den inte har en så visas det med ett kryss.  
 Man kommer även ha ett begränsat nummer av skott så att man kan förlora.  
-I slutändan kan jag kopiera det mesta och göra spelet till ett 2-player spel.
+I slutändan kan jag kopiera det mesta och göra spelet till ett 2-player spel.~~~~
