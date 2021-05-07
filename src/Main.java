@@ -55,39 +55,47 @@ public class Main extends Canvas implements Runnable{
     }
 
     private void createBoats(ArrayList<gridSpace> grids) {
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 64 + 1);
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
         int randomDirection = 0;
         int randomVar;
+        boolean allowed = false;
         grids.get(randomNum).hasBoat();
 
-        while (true) { //This makes sure that no boat or boatpart overlaps with another boat
-            randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-            switch (randomVar) {
-                case 0:
-                    randomDirection = -1;
-                    break;
-                case 1:
-                    randomDirection = 1;
-                    break;
-                case 2:
-                    randomDirection = -8;
-                    break;
-                case 3:
-                    randomDirection = 8;
-                    break;
-            }
-            randomNum = ThreadLocalRandom.current().nextInt(0, 64 + 1);
-            if (grids.get(randomNum).hasBoat) {
-                continue;
-            } else if (grids.get(randomNum + randomDirection).hasBoat) {
-                break;
-            }
-            break;
+        while (!allowed) {
+            //This makes sure that no boat or boatpart overlaps with another boat
+                randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
+                randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+                switch (randomVar) {
+                    case 0:
+                        randomDirection = -1;
+                        break;
+                    case 1:
+                        randomDirection = 1;
+                        break;
+                    case 2:
+                        randomDirection = -8;
+                        break;
+                    case 3:
+                        randomDirection = 8;
+                        break;
+                }
+                if (randomNum + randomDirection <= 0 || randomNum + randomDirection >= 63) {
+                    allowed = false;
+                } else if (grids.get(randomNum).hasBoat) {
+                    allowed = false;
+                } else if (grids.get(randomNum + randomDirection).hasBoat) {
+                    allowed = false;
+                } else {
+                    allowed = true;
+                }
         }
         grids.get(randomNum).hasBoat();
         grids.get(randomNum + randomDirection).hasBoat();
 
-        while (true) { //This makes sure that no boat or boatpart overlaps with another boat
+        allowed = false;
+        while (!allowed) {
+            //This makes sure that no boat or boatpart overlaps with another boat
+            randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
             randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
             switch (randomVar) {
                 case 0:
@@ -103,15 +111,17 @@ public class Main extends Canvas implements Runnable{
                     randomDirection = 8;
                     break;
             }
-            randomNum = ThreadLocalRandom.current().nextInt(0, 64 + 1);
-            if (grids.get(randomNum).hasBoat) {
-                continue;
+            if (randomNum + 2*randomDirection <= 0 || randomNum + 2*randomDirection >= 63) {
+                allowed = false;
+            } else if (grids.get(randomNum).hasBoat) {
+                allowed = false;
             } else if (grids.get(randomNum + randomDirection).hasBoat) {
-                continue;
-            } else if (grids.get(randomNum + 2 * randomDirection).hasBoat) {
-                break;
+                allowed = false;
+            } else if (grids.get(randomNum + 2*randomDirection).hasBoat) {
+                allowed = false;
+            } else {
+                allowed = true;
             }
-            break;
         }
         grids.get(randomNum).hasBoat();
         grids.get(randomNum + randomDirection).hasBoat();
@@ -243,6 +253,12 @@ public class Main extends Canvas implements Runnable{
                 } else {
                     playerPos += 8;
                 }
+            }
+            if (keyEvent.getKeyChar() == 'p') {
+                for (int i = 0; i < grids.toArray().length; i++) {
+                    grids.get(i).hasBoat = false;
+                }
+                createBoats(grids);
             }
         }
 
