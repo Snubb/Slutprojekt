@@ -17,6 +17,7 @@ public class Main extends Canvas implements Runnable{
     private final Rectangle player = new Rectangle();
 
     private int playerPos;
+    private int numOfShots;
 
     public ArrayList<gridSpace> grids = new ArrayList<>();
 
@@ -44,6 +45,8 @@ public class Main extends Canvas implements Runnable{
         player.width = 54;
         player.height = 54;
 
+        numOfShots = 32;
+
         createGrid();
         createBoats(grids);
     }
@@ -53,7 +56,6 @@ public class Main extends Canvas implements Runnable{
         int randomDirection = 0; //randomizes direcition that boat goes
         int randomVar; // little helper for determining direction
         boolean allowed = false; //used to determine weather the boat is "valid"(no overlap, no out of bounds etc.)
-        grids.get(randomNum).hasBoat(); // first 1-block boat
 
         while (!allowed) {
                 randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
@@ -132,6 +134,51 @@ public class Main extends Canvas implements Runnable{
         grids.get(randomNum).hasBoat();
         grids.get(randomNum + randomDirection).hasBoat();
         grids.get(randomNum + 2 * randomDirection).hasBoat();
+
+
+        allowed = false;
+        while (!allowed) { //Refer to comments above for specifics
+            randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
+            randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+            switch (randomVar) {
+                case 0:
+                    randomDirection = -1;
+                    break;
+                case 1:
+                    randomDirection = 1;
+                    break;
+                case 2:
+                    randomDirection = -8;
+                    break;
+                case 3:
+                    randomDirection = 8;
+                    break;
+            }
+            if (randomNum + 2*randomDirection <= 0 || randomNum + 3*randomDirection >= 63) {
+                allowed = false;
+            } else if (grids.get(randomNum).hasBoat) {
+                allowed = false;
+            } else if (grids.get(randomNum + randomDirection).hasBoat) {
+                allowed = false;
+            } else if (grids.get(randomNum + 2*randomDirection).hasBoat) {
+                allowed = false;
+            } else if (grids.get(randomNum + 3*randomDirection).hasBoat) {
+                allowed = false;
+            } else if (randomDirection == -1 || randomDirection == 1) {
+                if(randomNum/8 != (randomNum + 4*randomDirection)/8) {
+                    allowed = false;
+                } else {
+                    allowed = true;
+                }
+            }
+            else {
+                allowed = true;
+            }
+        }
+        grids.get(randomNum).hasBoat();
+        grids.get(randomNum + randomDirection).hasBoat();
+        grids.get(randomNum + 2 * randomDirection).hasBoat();
+        grids.get(randomNum + 3 * randomDirection).hasBoat();
     }
 
     private void createGrid() { //Creates the grid as 50*50 squares in a 8*8 pattern
@@ -172,6 +219,8 @@ public class Main extends Canvas implements Runnable{
         g.drawRect(100,100,50*8,50*8);
         drawGrids(g);
         drawPlayerRect(g);
+        g.setFont(new Font("Serif", Font.BOLD, 24));
+        g.drawString("Number of shots: " + numOfShots, 30, 30);
 
 
         g.dispose();
@@ -187,7 +236,7 @@ public class Main extends Canvas implements Runnable{
         for (int i = 0;i < grids.size(); i++) {
             g.setColor(new Color(156,55,8));
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
-            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit) {
+            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit || numOfShots == 0 && grids.get(i).hasBoat) {
                 g.setColor(Color.blue);
                 g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
             } else if (grids.get(i).hasBeenHit) {
@@ -272,8 +321,9 @@ public class Main extends Canvas implements Runnable{
                 createBoats(grids);
             }
             if (keyEvent.getKeyChar() == ' ') {
-                if (!grids.get(playerPos).hasBeenHit) {
+                if (!grids.get(playerPos).hasBeenHit && numOfShots > 0) {
                     grids.get(playerPos).hit();
+                    numOfShots--;
                 }
             }
         }
