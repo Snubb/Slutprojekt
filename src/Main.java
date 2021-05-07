@@ -197,14 +197,14 @@ public class Main extends Canvas implements Runnable{
     }
 
     private void createGrid() { //Creates the grid as 50*50 squares in a 8*8 pattern
-        int posX = 0;
-        int posY = 0;
+        int posX = 1;
+        int posY = 1;
         for (int i = 0;i < 64; i++) {
-            grids.add(new gridSpace(new Rectangle(50,50)));
+            grids.add(new gridSpace(new Rectangle(49,49)));
             grids.get(i).Hitbox.x = 100 + posX;
             grids.get(i).Hitbox.y = 100 + posY;
             if (posX >= 350) {
-                posX = 0;
+                posX = 1;
                 posY += 50;
             } else {
                 posX += 50;
@@ -231,7 +231,7 @@ public class Main extends Canvas implements Runnable{
 
         g.setColor(new Color(156, 55, 8));
 
-        g.drawRect(100,100,50*8,50*8);
+        g.drawRect(100,100,50*8 + 1,50*8 + 1);
         drawGrids(g);
         drawPlayerRect(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
@@ -249,7 +249,7 @@ public class Main extends Canvas implements Runnable{
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
-        g.drawRect(player.x - 2, player.y - 2, player.width, player.height);
+        g.drawRect(player.x - 3, player.y - 2, player.width +1, player.height);
     }
 
     private void drawGrids(Graphics g) { //draws all previously made grids
