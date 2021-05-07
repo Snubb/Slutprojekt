@@ -1,7 +1,11 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,6 +17,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Main extends Canvas implements Runnable{
     private final int width = 600; //Dimensions for playing area
     private final int height = 600;
+
+    private BufferedImage boom;
 
     private final Rectangle player = new Rectangle();
 
@@ -32,6 +38,13 @@ public class Main extends Canvas implements Runnable{
     private BufferStrategy bs;
 
     public Main() {
+
+        try {
+            boom = ImageIO.read(new File("boom.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         JFrame frame = new JFrame("Battleship clone");
         this.setSize(width,height);
         frame.add(this);
@@ -55,7 +68,7 @@ public class Main extends Canvas implements Runnable{
 
     private void createBoats(ArrayList<gridSpace> grids) {
         int randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1); //random number that determines boat positions
-        int randomDirection = 0; //randomizes direcition that boat goes
+        int randomDirection = 0; //randomizes direction that boat goes
         int randomVar; // little helper for determining direction
         boolean allowed = false; //used to determine weather the boat is "valid"(no overlap, no out of bounds etc.)
 
@@ -245,10 +258,12 @@ public class Main extends Canvas implements Runnable{
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
             if (grids.get(i).hasBoat && grids.get(i).hasBeenHit || numOfShots == 0 && grids.get(i).hasBoat) {
                 g.setColor(Color.blue);
-                g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
+                g.drawImage(boom, grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50, null);
+                //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
             } else if (grids.get(i).hasBeenHit) {
                 g.setColor(Color.black);
-                g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
+                g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y + 50);
+                g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y + 50, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y);
             }
         }
     }
