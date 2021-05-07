@@ -47,7 +47,7 @@ public class Main extends Canvas implements Runnable{
         player.width = 54;
         player.height = 54;
 
-        numOfShots = 32;
+        numOfShots = 24;
 
         createGrid();
         createBoats(grids);
@@ -226,6 +226,8 @@ public class Main extends Canvas implements Runnable{
 
         if (victory >= 9) {
             g.drawString("Congratulations!!", 300, 30);
+        } else if (victory < 9 && numOfShots == 0) {
+            g.drawString("You suck!!", 300, 30);
         }
 
         g.dispose();
