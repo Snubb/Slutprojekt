@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created 2021-04-27
@@ -50,6 +51,71 @@ public class Main extends Canvas implements Runnable{
         player.height = 54;
 
         createGrid();
+        createBoats(grids);
+    }
+
+    private void createBoats(ArrayList<gridSpace> grids) {
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 64 + 1);
+        int randomDirection = 0;
+        int randomVar;
+        grids.get(randomNum).hasBoat();
+
+        while (true) { //This makes sure that no boat or boatpart overlaps with another boat
+            randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+            switch (randomVar) {
+                case 0:
+                    randomDirection = -1;
+                    break;
+                case 1:
+                    randomDirection = 1;
+                    break;
+                case 2:
+                    randomDirection = -8;
+                    break;
+                case 3:
+                    randomDirection = 8;
+                    break;
+            }
+            randomNum = ThreadLocalRandom.current().nextInt(0, 64 + 1);
+            if (grids.get(randomNum).hasBoat) {
+                continue;
+            } else if (grids.get(randomNum + randomDirection).hasBoat) {
+                break;
+            }
+            break;
+        }
+        grids.get(randomNum).hasBoat();
+        grids.get(randomNum + randomDirection).hasBoat();
+
+        while (true) { //This makes sure that no boat or boatpart overlaps with another boat
+            randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+            switch (randomVar) {
+                case 0:
+                    randomDirection = -1;
+                    break;
+                case 1:
+                    randomDirection = 1;
+                    break;
+                case 2:
+                    randomDirection = -8;
+                    break;
+                case 3:
+                    randomDirection = 8;
+                    break;
+            }
+            randomNum = ThreadLocalRandom.current().nextInt(0, 64 + 1);
+            if (grids.get(randomNum).hasBoat) {
+                continue;
+            } else if (grids.get(randomNum + randomDirection).hasBoat) {
+                continue;
+            } else if (grids.get(randomNum + 2 * randomDirection).hasBoat) {
+                break;
+            }
+            break;
+        }
+        grids.get(randomNum).hasBoat();
+        grids.get(randomNum + randomDirection).hasBoat();
+        grids.get(randomNum + 2 * randomDirection).hasBoat();
     }
 
     private void createGrid() {
@@ -104,6 +170,9 @@ public class Main extends Canvas implements Runnable{
     private void drawGrids(Graphics g) {
         for (int i = 0;i < grids.size(); i++) {
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
+            if (grids.get(i).hasBoat) {
+                g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
+            }
         }
     }
 
