@@ -16,6 +16,8 @@ public class Main extends Canvas implements Runnable{
 
     private final Rectangle player = new Rectangle();
 
+    private int victory = 0;
+
     private int playerPos;
     private int numOfShots;
 
@@ -222,6 +224,9 @@ public class Main extends Canvas implements Runnable{
         g.setFont(new Font("Serif", Font.BOLD, 24));
         g.drawString("Number of shots: " + numOfShots, 30, 30);
 
+        if (victory >= 9) {
+            g.drawString("Congratulations!!", 300, 30);
+        }
 
         g.dispose();
         bs.show();
@@ -324,6 +329,12 @@ public class Main extends Canvas implements Runnable{
                 if (!grids.get(playerPos).hasBeenHit && numOfShots > 0) {
                     grids.get(playerPos).hit();
                     numOfShots--;
+                }
+                for (int i = 0;i < grids.toArray().length; i++) {
+                    if (grids.get(i).hasBoat && grids.get(i).hasBeenHit && grids.get(i).score) {
+                        grids.get(i).score();
+                        victory++;
+                    }
                 }
             }
         }

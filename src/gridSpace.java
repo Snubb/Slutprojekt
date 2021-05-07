@@ -4,6 +4,7 @@ public class gridSpace {
     public Rectangle Hitbox;
     public boolean hasBoat = false;
     public boolean hasBeenHit = false;
+    public boolean score = true;
 
     public gridSpace(Rectangle Hitbox) {
         this.Hitbox = Hitbox;
@@ -24,6 +25,8 @@ public class gridSpace {
     public Rectangle getHitbox() {
         return Hitbox;
     }
-
+    public void score() {
+        this.score = false;
+    }
 
 }
