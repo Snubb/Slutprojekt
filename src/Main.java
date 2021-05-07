@@ -1,13 +1,7 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.beans.FeatureDescriptor;
-import java.io.File;
-import java.io.IOException;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -55,17 +49,16 @@ public class Main extends Canvas implements Runnable{
     }
 
     private void createBoats(ArrayList<gridSpace> grids) {
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
-        int randomDirection = 0;
-        int randomVar;
-        boolean allowed = false;
-        grids.get(randomNum).hasBoat();
+        int randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1); //random number that determines boat positions
+        int randomDirection = 0; //randomizes direcition that boat goes
+        int randomVar; // little helper for determining direction
+        boolean allowed = false; //used to determine weather the boat is "valid"(no overlap, no out of bounds etc.)
+        grids.get(randomNum).hasBoat(); // first 1-block boat
 
         while (!allowed) {
-            //This makes sure that no boat or boatpart overlaps with another boat
                 randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
                 randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-                switch (randomVar) {
+                switch (randomVar) { //Determines direction
                     case 0:
                         randomDirection = -1;
                         break;
@@ -79,14 +72,14 @@ public class Main extends Canvas implements Runnable{
                         randomDirection = 8;
                         break;
                 }
-                if (randomNum + randomDirection <= 0 || randomNum + randomDirection >= 63) {
+                if (randomNum + randomDirection <= 0 || randomNum + randomDirection >= 63) {//No out of bounds
                     allowed = false;
-                } else if (grids.get(randomNum).hasBoat) {
+                } else if (grids.get(randomNum).hasBoat) { //No overlap with old boat
                     allowed = false;
                 } else if (grids.get(randomNum + randomDirection).hasBoat) {
                     allowed = false;
                 } else if (randomDirection == -1 || randomDirection == 1) {
-                    if(randomNum/8 != (randomNum + randomDirection)/8) {
+                    if(randomNum/8 != (randomNum + randomDirection)/8) {//No "cliping" where boat starts at one side and continues on the other
                         allowed = false;
                     } else {
                         allowed = true;
@@ -100,8 +93,7 @@ public class Main extends Canvas implements Runnable{
         grids.get(randomNum + randomDirection).hasBoat();
 
         allowed = false;
-        while (!allowed) {
-            //This makes sure that no boat or boatpart overlaps with another boat
+        while (!allowed) { //Refer to comments above for specifics
             randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
             randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
             switch (randomVar) {
@@ -142,7 +134,7 @@ public class Main extends Canvas implements Runnable{
         grids.get(randomNum + 2 * randomDirection).hasBoat();
     }
 
-    private void createGrid() {
+    private void createGrid() { //Creates the grid as 50*50 squares in a 8*8 pattern
         int posX = 0;
         int posY = 0;
         for (int i = 0;i < 64; i++) {
@@ -158,13 +150,13 @@ public class Main extends Canvas implements Runnable{
         }
     }
 
-    public void update() {
+    public void update() { //Updates every frame
         player.x = grids.get(playerPos).getHitbox().x;
         player.y = grids.get(playerPos).getHitbox().y;
 
     }
 
-    public void draw() {
+    public void draw() { //draws every frame
         bs = getBufferStrategy();
         if (bs == null) {
             createBufferStrategy(3);
@@ -186,12 +178,12 @@ public class Main extends Canvas implements Runnable{
         bs.show();
     }
 
-    private void drawPlayerRect(Graphics g) {
+    private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
         g.drawRect(player.x - 2, player.y - 2, player.width, player.height);
     }
 
-    private void drawGrids(Graphics g) {
+    private void drawGrids(Graphics g) { //draws all previously made grids
         for (int i = 0;i < grids.size(); i++) {
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
             if (grids.get(i).hasBoat) {
