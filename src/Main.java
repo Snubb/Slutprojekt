@@ -85,7 +85,14 @@ public class Main extends Canvas implements Runnable{
                     allowed = false;
                 } else if (grids.get(randomNum + randomDirection).hasBoat) {
                     allowed = false;
-                } else {
+                } else if (randomDirection == -1 || randomDirection == 1) {
+                    if(randomNum/8 != (randomNum + randomDirection)/8) {
+                        allowed = false;
+                    } else {
+                        allowed = true;
+                    }
+                }
+                else {
                     allowed = true;
                 }
         }
@@ -119,7 +126,14 @@ public class Main extends Canvas implements Runnable{
                 allowed = false;
             } else if (grids.get(randomNum + 2*randomDirection).hasBoat) {
                 allowed = false;
-            } else {
+            } else if (randomDirection == -1 || randomDirection == 1) {
+                if(randomNum/8 != (randomNum + 2*randomDirection)/8) {
+                    allowed = false;
+                } else {
+                    allowed = true;
+                }
+            }
+            else {
                 allowed = true;
             }
         }
