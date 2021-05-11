@@ -27,6 +27,10 @@ public class Main extends Canvas implements Runnable{
     private int playerPos;
     private int numOfShots;
 
+    boolean boat2 = false;
+    boolean boat3 = false;
+    boolean boat4 = false;
+
     public ArrayList<gridSpace> grids = new ArrayList<>();
 
     private boolean isRunning;
@@ -60,7 +64,7 @@ public class Main extends Canvas implements Runnable{
         player.width = 54;
         player.height = 54;
 
-        numOfShots = 24;
+        numOfShots = 50;
 
         createGrid();
         createBoats(grids);
@@ -251,8 +255,61 @@ public class Main extends Canvas implements Runnable{
     private void drawProgress(Graphics g) {
         g.setColor(new Color(255, 0, 0));
         g.fillRect(100, 510, 100, 50);
+        if (boat2) {
+            g.setColor(Color.black);
+            g.drawLine(100,510,200,560);
+            g.drawLine(100,560,200,510);
+        } else {
+            int destroyed;
+            destroyed = 0;
+            for (int i = 0;i < grids.toArray().length; i++) {
+                if (grids.get(i).boatNum == 2 && grids.get(i).hasBeenHit) {
+                    destroyed++;
+                }
+            }
+            if (destroyed == 2) {
+                System.out.println("YES");
+                boat2 = true;
+            }
+        }
+        g.setColor(new Color(255, 0, 0));
         g.fillRect(210, 510, 150, 50);
+        if (boat3) {
+            g.setColor(Color.black);
+            g.drawLine(210,510,360,560);
+            g.drawLine(210,560,360,510);
+        } else {
+            int destroyed;
+            destroyed = 0;
+            for (int i = 0;i < grids.toArray().length; i++) {
+                if (grids.get(i).boatNum == 3 && grids.get(i).hasBeenHit) {
+                    destroyed++;
+                }
+            }
+            if (destroyed == 3) {
+                System.out.println("YES");
+                boat3 = true;
+            }
+        }
+        g.setColor(new Color(255, 0, 0));
         g.fillRect(100, 570, 200, 50);
+        if (boat4) {
+            g.setColor(Color.black);
+            g.drawLine(100,570,300,620);
+            g.drawLine(100,620,300,570);
+        } else {
+            int destroyed;
+            destroyed = 0;
+            for (int i = 0;i < grids.toArray().length; i++) {
+                if (grids.get(i).boatNum == 4 && grids.get(i).hasBeenHit) {
+                    destroyed++;
+                }
+            }
+            if (destroyed == 4) {
+                System.out.println("YES");
+                boat4 = true;
+            }
+        }
     }
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
