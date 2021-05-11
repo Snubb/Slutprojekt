@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Main extends Canvas implements Runnable{
     private final int width = 600; //Dimensions for playing area
-    private final int height = 600;
+    private final int height = 700;
 
     private BufferedImage boom;
 
@@ -66,7 +66,7 @@ public class Main extends Canvas implements Runnable{
         createBoats(grids);
     }
 
-    private void createBoats(ArrayList<gridSpace> grids) {
+    private void createBoats(ArrayList<gridSpace> grids) { //This shit is way too long but it works and I have other stuff to focus on
         int randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1); //random number that determines boat positions
         int randomDirection = 0; //randomizes direction that boat goes
         int randomVar; // little helper for determining direction
@@ -96,7 +96,7 @@ public class Main extends Canvas implements Runnable{
                 } else if (grids.get(randomNum + randomDirection).hasBoat) {
                     allowed = false;
                 } else if (randomDirection == -1 || randomDirection == 1) {
-                    if(randomNum/8 != (randomNum + randomDirection)/8) {//No "cliping" where boat starts at one side and continues on the other
+                    if(randomNum/8 != (randomNum + randomDirection)/8) {//No "clipping" where boat starts at one side and continues on the other
                         allowed = false;
                     } else {
                         allowed = true;
@@ -106,8 +106,8 @@ public class Main extends Canvas implements Runnable{
                     allowed = true;
                 }
         }
-        grids.get(randomNum).hasBoat();
-        grids.get(randomNum + randomDirection).hasBoat();
+        grids.get(randomNum).hasBoat(2);
+        grids.get(randomNum + randomDirection).hasBoat(2);
 
         allowed = false;
         while (!allowed) { //Refer to comments above for specifics
@@ -146,9 +146,9 @@ public class Main extends Canvas implements Runnable{
                 allowed = true;
             }
         }
-        grids.get(randomNum).hasBoat();
-        grids.get(randomNum + randomDirection).hasBoat();
-        grids.get(randomNum + 2 * randomDirection).hasBoat();
+        grids.get(randomNum).hasBoat(3);
+        grids.get(randomNum + randomDirection).hasBoat(3);
+        grids.get(randomNum + 2 * randomDirection).hasBoat(3);
 
 
         allowed = false;
@@ -190,10 +190,10 @@ public class Main extends Canvas implements Runnable{
                 allowed = true;
             }
         }
-        grids.get(randomNum).hasBoat();
-        grids.get(randomNum + randomDirection).hasBoat();
-        grids.get(randomNum + 2 * randomDirection).hasBoat();
-        grids.get(randomNum + 3 * randomDirection).hasBoat();
+        grids.get(randomNum).hasBoat(4);
+        grids.get(randomNum + randomDirection).hasBoat(4);
+        grids.get(randomNum + 2 * randomDirection).hasBoat(4);
+        grids.get(randomNum + 3 * randomDirection).hasBoat(4);
     }
 
     private void createGrid() { //Creates the grid as 50*50 squares in a 8*8 pattern
@@ -234,6 +234,7 @@ public class Main extends Canvas implements Runnable{
         g.drawRect(100,100,50*8 + 1,50*8 + 1);
         drawGrids(g);
         drawPlayerRect(g);
+        drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
         g.drawString("Number of shots: " + numOfShots, 30, 30);
 
@@ -245,6 +246,13 @@ public class Main extends Canvas implements Runnable{
 
         g.dispose();
         bs.show();
+    }
+
+    private void drawProgress(Graphics g) {
+        g.setColor(new Color(255, 0, 0));
+        g.fillRect(100, 510, 100, 50);
+        g.fillRect(210, 510, 150, 50);
+        g.fillRect(100, 570, 200, 50);
     }
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
@@ -316,14 +324,14 @@ public class Main extends Canvas implements Runnable{
                 }
             }
             if (keyEvent.getKeyChar() == 'a') {
-                if (player.x <= 100) {
+                if (player.x <= 150) {
                     playerPos += 7;
                 } else {
                     playerPos--;
                 }
             }
             if (keyEvent.getKeyChar() == 'w') {
-                if (player.y <= 100) {
+                if (player.y <= 150) {
                     playerPos += 56;
                 } else {
                     playerPos -= 8;
