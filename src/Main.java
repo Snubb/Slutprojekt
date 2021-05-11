@@ -314,7 +314,7 @@ public class Main extends Canvas implements Runnable{
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
-        g.drawRect(player.x - 3, player.y - 2, player.width +1, player.height);
+        g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
     }
 
     private void drawGrids(Graphics g) { //draws all previously made grids
