@@ -39,8 +39,6 @@ public class Main extends Canvas implements Runnable{
 
     int fps = 60;
 
-    private BufferStrategy bs;
-
     public Main() {
 
         try {
@@ -64,7 +62,7 @@ public class Main extends Canvas implements Runnable{
         player.width = 54;
         player.height = 54;
 
-        numOfShots = 50;
+        numOfShots = 30;
 
         createGrid();
         createBoats(grids);
@@ -100,11 +98,8 @@ public class Main extends Canvas implements Runnable{
                 } else if (grids.get(randomNum + randomDirection).hasBoat) {
                     allowed = false;
                 } else if (randomDirection == -1 || randomDirection == 1) {
-                    if(randomNum/8 != (randomNum + randomDirection)/8) {//No "clipping" where boat starts at one side and continues on the other
-                        allowed = false;
-                    } else {
-                        allowed = true;
-                    }
+                    //No "clipping" where boat starts at one side and continues on the other
+                    allowed = randomNum / 8 == (randomNum + randomDirection) / 8;
                 }
                 else {
                     allowed = true;
@@ -140,11 +135,7 @@ public class Main extends Canvas implements Runnable{
             } else if (grids.get(randomNum + 2*randomDirection).hasBoat) {
                 allowed = false;
             } else if (randomDirection == -1 || randomDirection == 1) {
-                if(randomNum/8 != (randomNum + 2*randomDirection)/8) {
-                    allowed = false;
-                } else {
-                    allowed = true;
-                }
+                allowed = randomNum / 8 == (randomNum + 2 * randomDirection) / 8;
             }
             else {
                 allowed = true;
@@ -184,11 +175,7 @@ public class Main extends Canvas implements Runnable{
             } else if (grids.get(randomNum + 3*randomDirection).hasBoat) {
                 allowed = false;
             } else if (randomDirection == -1 || randomDirection == 1) {
-                if(randomNum/8 != (randomNum + 4*randomDirection)/8) {
-                    allowed = false;
-                } else {
-                    allowed = true;
-                }
+                allowed = randomNum / 8 == (randomNum + 4 * randomDirection) / 8;
             }
             else {
                 allowed = true;
@@ -223,7 +210,7 @@ public class Main extends Canvas implements Runnable{
     }
 
     public void draw() { //draws every frame
-        bs = getBufferStrategy();
+        BufferStrategy bs = getBufferStrategy();
         if (bs == null) {
             createBufferStrategy(3);
             return;
@@ -240,11 +227,12 @@ public class Main extends Canvas implements Runnable{
         drawPlayerRect(g);
         drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
-        g.drawString("Number of shots: " + numOfShots, 30, 30);
 
+        g.setColor(Color.black);
+        g.drawString("Number of shots: " + numOfShots, 30, 30);
         if (victory >= 9) {
             g.drawString("Congratulations!!", 300, 30);
-        } else if (victory < 9 && numOfShots == 0) {
+        } else if (numOfShots == 0) {
             g.drawString("You suck!!", 300, 30);
         }
 
@@ -318,17 +306,17 @@ public class Main extends Canvas implements Runnable{
     }
 
     private void drawGrids(Graphics g) { //draws all previously made grids
-        for (int i = 0;i < grids.size(); i++) {
-            g.setColor(new Color(156,55,8));
-            g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
-            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit || numOfShots == 0 && grids.get(i).hasBoat) {
+        for (gridSpace grid : grids) {
+            g.setColor(new Color(156, 55, 8));
+            g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
+            if (grid.hasBoat && grid.hasBeenHit || numOfShots == 0 && grid.hasBoat) {
                 g.setColor(Color.blue);
-                g.drawImage(boom, grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50, null);
+                g.drawImage(boom, grid.Hitbox.x, grid.Hitbox.y, 50, 50, null);
                 //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
-            } else if (grids.get(i).hasBeenHit) {
+            } else if (grid.hasBeenHit) {
                 g.setColor(Color.black);
-                g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y + 50);
-                g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y + 50, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y);
+                g.drawLine(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.x + 50, grid.Hitbox.y + 50);
+                g.drawLine(grid.Hitbox.x, grid.Hitbox.y + 50, grid.Hitbox.x + 50, grid.Hitbox.y);
             }
         }
     }
