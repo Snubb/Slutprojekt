@@ -232,8 +232,10 @@ public class Main extends Canvas implements Runnable{
         g.drawString("Number of shots: " + numOfShots, 30, 30);
         if (victory >= 9) {
             g.drawString("Congratulations!!", 300, 30);
+            g.drawString("Press r to restart.", 300, 50);
         } else if (numOfShots == 0) {
             g.drawString("You suck!!", 300, 30);
+            g.drawString("Press r to restart.", 300, 50);
         }
 
         g.dispose();
@@ -407,7 +409,7 @@ public class Main extends Canvas implements Runnable{
                     }
                 }
             }
-            if (keyEvent.getKeyChar() == 'o') {
+            if (keyEvent.getKeyChar() == 'r') {
                 System.out.println("Restarted");
                 reset();
             }
@@ -431,6 +433,7 @@ public class Main extends Canvas implements Runnable{
         player.y = 100;
         player.width = 54;
         player.height = 54;
+        victory = 0;
 
         numOfShots = 30;
         boat2 = false;
@@ -439,6 +442,7 @@ public class Main extends Canvas implements Runnable{
         for (gridSpace grid : grids) {
             grid.reset();
         }
+        grids.clear();
         createGrid();
         createBoats(grids);
 
