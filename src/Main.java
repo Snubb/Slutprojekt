@@ -407,6 +407,10 @@ public class Main extends Canvas implements Runnable{
                     }
                 }
             }
+            if (keyEvent.getKeyChar() == 'o') {
+                System.out.println("Restarted");
+                reset();
+            }
         }
 
         @Override
@@ -418,5 +422,25 @@ public class Main extends Canvas implements Runnable{
         public void keyReleased(KeyEvent keyEvent) {
 
         }
+    }
+
+    private void reset() {
+        //isRunning = false;
+
+        player.x = 100;
+        player.y = 100;
+        player.width = 54;
+        player.height = 54;
+
+        numOfShots = 30;
+        boat2 = false;
+        boat3 = false;
+        boat4 = false;
+        for (gridSpace grid : grids) {
+            grid.reset();
+        }
+        createGrid();
+        createBoats(grids);
+
     }
 }

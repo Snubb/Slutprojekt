@@ -5,7 +5,7 @@ public class gridSpace {
     public boolean hasBoat = false;
     public boolean hasBeenHit = false;
     public boolean score = true;
-    public int boatNum; //Keeps track of length of boat
+    public int boatNum = 0; //Keeps track of length of boat
 
     public gridSpace(Rectangle Hitbox) {
         this.Hitbox = Hitbox;
@@ -29,6 +29,12 @@ public class gridSpace {
     }
     public void score() {
         this.score = false;
+    }
+    public void reset() {
+        this.score = true;
+        this.hasBeenHit = false;
+        this.hasBoat = false;
+        this.boatNum = 0;
     }
 
 }
