@@ -164,7 +164,9 @@ public class Main extends Canvas implements Runnable{
                     randomDirection = 8;
                     break;
             }
-            if (randomNum + 2*randomDirection <= 0 || randomNum + 3*randomDirection >= 63) {
+            if ((randomNum + 3*randomDirection) < 0 || (randomNum + 3*randomDirection) > grids.size()) {
+                allowed = false;
+            } else if (randomNum + 2*randomDirection <= 0 || randomNum + 3*randomDirection >= 63) {
                 allowed = false;
             } else if (grids.get(randomNum).hasBoat) {
                 allowed = false;
@@ -310,6 +312,7 @@ public class Main extends Canvas implements Runnable{
     private void drawGrids(Graphics g) { //draws all previously made grids
         for (gridSpace grid : grids) {
             g.setColor(new Color(156, 55, 8));
+            g.setColor(Color.white);
             g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
             if (grid.hasBoat && grid.hasBeenHit || numOfShots == 0 && grid.hasBoat) {
                 g.setColor(Color.blue);
