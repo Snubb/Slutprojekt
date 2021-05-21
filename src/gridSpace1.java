@@ -1,13 +1,13 @@
 import java.awt.*;
 
-public class gridSpace {
+public class gridSpace1 {
     public Rectangle Hitbox;
     public boolean hasBoat = false;
     public boolean hasBeenHit = false;
     public boolean score = true;
     public int boatNum = 0; //Keeps track of length of boat
 
-    public gridSpace(Rectangle Hitbox) {
+    public gridSpace1(Rectangle Hitbox) {
         this.Hitbox = Hitbox;
     }
 

@@ -14,8 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author me :)
  */
-public class Main extends Canvas implements Runnable{
-    private final int width = 600; //Dimensions for playing area
+public class Multiplayer extends Canvas implements Runnable{
+    private final int width = 1300; //Dimensions for playing area
     private final int height = 700;
 
     private BufferedImage boom;
@@ -25,13 +25,14 @@ public class Main extends Canvas implements Runnable{
     private int victory = 0;
 
     private int playerPos;
-    private int numOfShots;
+    private int playerTurn = 1;
 
     boolean boat2 = false;
     boolean boat3 = false;
     boolean boat4 = false;
 
-    public ArrayList<gridSpace1> grids = new ArrayList<>();
+    public ArrayList<gridSpace1> grids1 = new ArrayList<>();
+    public ArrayList<gridSpace1> grids2 = new ArrayList<>();
 
     private boolean isRunning;
 
@@ -39,7 +40,7 @@ public class Main extends Canvas implements Runnable{
 
     int fps = 60;
 
-    public Main() {
+    public Multiplayer() {
 
         try {
             boom = ImageIO.read(new File("boom.png"));
@@ -62,10 +63,9 @@ public class Main extends Canvas implements Runnable{
         player.width = 54;
         player.height = 54;
 
-        numOfShots = 30;
-
-        createGrid();
-        createBoats(grids);
+        createGrid1();
+        createGrid2();
+        createBoats(grids1);
     }
 
     private void createBoats(ArrayList<gridSpace1> grids) { //This shit is way too long but it works and I have other stuff to focus on
@@ -75,35 +75,35 @@ public class Main extends Canvas implements Runnable{
         boolean allowed = false; //used to determine weather the boat is "valid"(no overlap, no out of bounds etc.)
 
         while (!allowed) {
-                randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
-                randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-                switch (randomVar) { //Determines direction
-                    case 0:
-                        randomDirection = -1;
-                        break;
-                    case 1:
-                        randomDirection = 1;
-                        break;
-                    case 2:
-                        randomDirection = -8;
-                        break;
-                    case 3:
-                        randomDirection = 8;
-                        break;
-                }
-                if (randomNum + randomDirection <= 0 || randomNum + randomDirection >= 63) {//No out of bounds
-                    allowed = false;
-                } else if (grids.get(randomNum).hasBoat) { //No overlap with old boat
-                    allowed = false;
-                } else if (grids.get(randomNum + randomDirection).hasBoat) {
-                    allowed = false;
-                } else if (randomDirection == -1 || randomDirection == 1) {
-                    //No "clipping" where boat starts at one side and continues on the other
-                    allowed = randomNum / 8 == (randomNum + randomDirection) / 8;
-                }
-                else {
-                    allowed = true;
-                }
+            randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1);
+            randomVar = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+            switch (randomVar) { //Determines direction
+                case 0:
+                    randomDirection = -1;
+                    break;
+                case 1:
+                    randomDirection = 1;
+                    break;
+                case 2:
+                    randomDirection = -8;
+                    break;
+                case 3:
+                    randomDirection = 8;
+                    break;
+            }
+            if (randomNum + randomDirection <= 0 || randomNum + randomDirection >= 63) {//No out of bounds
+                allowed = false;
+            } else if (grids.get(randomNum).hasBoat) { //No overlap with old boat
+                allowed = false;
+            } else if (grids.get(randomNum + randomDirection).hasBoat) {
+                allowed = false;
+            } else if (randomDirection == -1 || randomDirection == 1) {
+                //No "clipping" where boat starts at one side and continues on the other
+                allowed = randomNum / 8 == (randomNum + randomDirection) / 8;
+            }
+            else {
+                allowed = true;
+            }
         }
         grids.get(randomNum).hasBoat(2);
         grids.get(randomNum + randomDirection).hasBoat(2);
@@ -189,13 +189,29 @@ public class Main extends Canvas implements Runnable{
         grids.get(randomNum + 3 * randomDirection).hasBoat(4);
     }
 
-    private void createGrid() { //Creates the grid as 50*50 squares in a 8*8 pattern
+    private void createGrid1() { //Creates the grid as 50*50 squares in a 8*8 pattern
         int posX = 1;
         int posY = 1;
         for (int i = 0;i < 64; i++) {
-            grids.add(new gridSpace1(new Rectangle(49,49)));
-            grids.get(i).Hitbox.x = 100 + posX;
-            grids.get(i).Hitbox.y = 100 + posY;
+            grids1.add(new gridSpace1(new Rectangle(49,49)));
+            grids1.get(i).Hitbox.x = 100 + posX;
+            grids1.get(i).Hitbox.y = 100 + posY;
+            if (posX >= 350) {
+                posX = 1;
+                posY += 50;
+            } else {
+                posX += 50;
+            }
+        }
+    }
+
+    private void createGrid2() { //Creates the grid as 50*50 squares in a 8*8 pattern
+        int posX = 1;
+        int posY = 1;
+        for (int i = 0;i < 64; i++) {
+            grids2.add(new gridSpace1(new Rectangle(49,49)));
+            grids2.get(i).Hitbox.x = 800 + posX;
+            grids2.get(i).Hitbox.y = 100 + posY;
             if (posX >= 350) {
                 posX = 1;
                 posY += 50;
@@ -206,8 +222,13 @@ public class Main extends Canvas implements Runnable{
     }
 
     public void update() { //Updates every frame
-        player.x = grids.get(playerPos).getHitbox().x;
-        player.y = grids.get(playerPos).getHitbox().y;
+        if (playerTurn == 1) {
+            player.x = grids1.get(playerPos).getHitbox().x;
+            player.y = grids1.get(playerPos).getHitbox().y;
+        } else {
+            player.x = grids2.get(playerPos).getHitbox().x;
+            player.y = grids2.get(playerPos).getHitbox().y;
+        }
 
     }
 
@@ -225,21 +246,21 @@ public class Main extends Canvas implements Runnable{
         g.setColor(new Color(156, 55, 8));
 
         g.drawRect(100,100,50*8 + 1,50*8 + 1);
+        g.drawRect(800,100,50*8 + 1,50*8 + 1);
         //g.fillRect(70,100,30,402);
-        drawGrids(g);
+        drawGrids1(g);
+        drawGrids2(g);
         drawPlayerRect(g);
         drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
 
         g.setColor(Color.black);
-        g.drawString("Number of shots: " + numOfShots, 30, 30);
-        if (victory >= 9) {
-            g.drawString("Congratulations!!", 300, 30);
-            g.drawString("Press r to restart.", 300, 50);
-        } else if (numOfShots == 0) {
-            g.drawString("You suck!!", 300, 30);
-            g.drawString("Press r to restart.", 300, 50);
-        }
+
+        g.drawString("PlayerPos: " + playerPos, 30, 70);
+        g.drawString("PlayerX: " + player.x, 160, 70);
+        g.drawString("PlayerY: " + player.y, 300, 70);
+
+
 
         g.dispose();
         bs.show();
@@ -255,8 +276,8 @@ public class Main extends Canvas implements Runnable{
         } else {
             int destroyed;
             destroyed = 0;
-            for (int i = 0;i < grids.toArray().length; i++) {
-                if (grids.get(i).boatNum == 2 && grids.get(i).hasBeenHit) {
+            for (int i = 0;i < grids1.toArray().length; i++) {
+                if (grids1.get(i).boatNum == 2 && grids1.get(i).hasBeenHit) {
                     destroyed++;
                 }
             }
@@ -274,8 +295,8 @@ public class Main extends Canvas implements Runnable{
         } else {
             int destroyed;
             destroyed = 0;
-            for (int i = 0;i < grids.toArray().length; i++) {
-                if (grids.get(i).boatNum == 3 && grids.get(i).hasBeenHit) {
+            for (int i = 0;i < grids1.toArray().length; i++) {
+                if (grids1.get(i).boatNum == 3 && grids1.get(i).hasBeenHit) {
                     destroyed++;
                 }
             }
@@ -293,8 +314,8 @@ public class Main extends Canvas implements Runnable{
         } else {
             int destroyed;
             destroyed = 0;
-            for (int i = 0;i < grids.toArray().length; i++) {
-                if (grids.get(i).boatNum == 4 && grids.get(i).hasBeenHit) {
+            for (int i = 0;i < grids1.toArray().length; i++) {
+                if (grids1.get(i).boatNum == 4 && grids1.get(i).hasBeenHit) {
                     destroyed++;
                 }
             }
@@ -310,13 +331,31 @@ public class Main extends Canvas implements Runnable{
         g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
     }
 
-    private void drawGrids(Graphics g) { //draws all previously made grids
+    private void drawGrids1(Graphics g) { //draws all previously made grids
         g.setColor(new Color(156,55,8));
         g.fillRect(100,100,-50,500);
-        for (gridSpace1 grid : grids) {
+        for (gridSpace1 grid : grids1) {
             g.setColor(new Color(156, 55, 8));
             g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
-            if (grid.hasBoat && grid.hasBeenHit || numOfShots == 0 && grid.hasBoat) {
+            if (grid.hasBoat && grid.hasBeenHit) {
+                g.setColor(Color.blue);
+                g.drawImage(boom, grid.Hitbox.x, grid.Hitbox.y, 50, 50, null);
+                //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
+            } else if (grid.hasBeenHit) {
+                g.setColor(Color.black);
+                g.drawLine(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.x + 50, grid.Hitbox.y + 50);
+                g.drawLine(grid.Hitbox.x, grid.Hitbox.y + 50, grid.Hitbox.x + 50, grid.Hitbox.y);
+            }
+        }
+    }
+
+    private void drawGrids2(Graphics g) { //draws all previously made grids
+        g.setColor(new Color(156,55,8));
+        g.fillRect(100,100,-50,500);
+        for (gridSpace1 grid : grids2) {
+            g.setColor(new Color(156, 55, 8));
+            g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
+            if (grid.hasBoat && grid.hasBeenHit) {
                 g.setColor(Color.blue);
                 g.drawImage(boom, grid.Hitbox.x, grid.Hitbox.y, 50, 50, null);
                 //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
@@ -330,7 +369,7 @@ public class Main extends Canvas implements Runnable{
 
     public static void main(String[] args) {
         // Här startas ditt program
-        Main painting = new Main();
+        Multiplayer painting = new Multiplayer();
         painting.start();
     }
 
@@ -368,51 +407,90 @@ public class Main extends Canvas implements Runnable{
     private class KL implements KeyListener {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
-            if (keyEvent.getKeyChar() == 'd') {
-                if (player.x >= 450) {
-                    playerPos -= 7;
-                } else {
-                    playerPos++;
-                }
-            }
-            if (keyEvent.getKeyChar() == 'a') {
-                if (player.x <= 150) {
-                    playerPos += 7;
-                } else {
-                    playerPos--;
-                }
-            }
-            if (keyEvent.getKeyChar() == 'w') {
-                if (player.y <= 150) {
-                    playerPos += 56;
-                } else {
-                    playerPos -= 8;
-                }
-            }
-            if (keyEvent.getKeyChar() == 's') {
-                if (player.y >= 450) {
-                    playerPos -= 56;
-                } else {
-                    playerPos += 8;
-                }
-            }
-            if (keyEvent.getKeyChar() == 'p') {
-                for (int i = 0; i < grids.toArray().length; i++) {
-                    grids.get(i).hasBoat = false;
-                }
-                createBoats(grids);
-            }
-            if (keyEvent.getKeyChar() == ' ') {
-                if (!grids.get(playerPos).hasBeenHit && numOfShots > 0) {
-                    grids.get(playerPos).hit();
-                    numOfShots--;
-                }
-                for (int i = 0;i < grids.toArray().length; i++) {
-                    if (grids.get(i).hasBoat && grids.get(i).hasBeenHit && grids.get(i).score) {
-                        grids.get(i).score();
-                        victory++;
+            if (playerTurn == 1) {
+                if (keyEvent.getKeyChar() == 'd') {
+                    if (player.x >= 450) {
+                        playerPos -= 7;
+                    } else {
+                        playerPos++;
                     }
                 }
+                if (keyEvent.getKeyChar() == 'a') {
+                    if (player.x <= 150) {
+                        playerPos += 7;
+                    } else {
+                        playerPos--;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 'w') {
+                    if (player.y <= 150) {
+                        playerPos += 56;
+                    } else {
+                        playerPos -= 8;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 's') {
+                    if (player.y >= 450) {
+                        playerPos -= 56;
+                    } else {
+                        playerPos += 8;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 'p') {
+                    for (int i = 0; i < grids1.toArray().length; i++) {
+                        grids1.get(i).hasBoat = false;
+                    }
+                    createBoats(grids1);
+                }
+            } else {
+                if (keyEvent.getKeyChar() == 'd') {
+                    if (player.x >= 1150) {
+                        playerPos -= 7;
+                    } else {
+                        playerPos++;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 'a') {
+                    if (player.x <= 850) {
+                        playerPos += 7;
+                    } else {
+                        playerPos--;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 'w') {
+                    if (player.y <= 150) {
+                        playerPos += 56;
+                    } else {
+                        playerPos -= 8;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 's') {
+                    if (player.y >= 450) {
+                        playerPos -= 56;
+                    } else {
+                        playerPos += 8;
+                    }
+                }
+                if (keyEvent.getKeyChar() == 'p') {
+                    for (int i = 0; i < grids1.toArray().length; i++) {
+                        grids1.get(i).hasBoat = false;
+                    }
+                    createBoats(grids1);
+                }
+            }
+            if (keyEvent.getKeyChar() == ' ') {
+                if (playerTurn == 1) {
+                    if (!grids1.get(playerPos).hasBeenHit) {
+                        grids1.get(playerPos).hit();
+                        playerTurn = 2;
+                    }
+                } else {
+                    if (!grids2.get(playerPos).hasBeenHit) {
+                        grids2.get(playerPos).hit();
+                        playerTurn = 1;
+                    }
+                }
+
             }
             if (keyEvent.getKeyChar() == 'r') {
                 System.out.println("Restarted");
@@ -440,16 +518,15 @@ public class Main extends Canvas implements Runnable{
         player.height = 54;
         victory = 0;
 
-        numOfShots = 30;
         boat2 = false;
         boat3 = false;
         boat4 = false;
-        for (gridSpace1 grid : grids) {
+        for (gridSpace1 grid : grids1) {
             grid.reset();
         }
-        grids.clear();
-        createGrid();
-        createBoats(grids);
+        grids1.clear();
+        createGrid1();
+        createBoats(grids1);
 
     }
 }
