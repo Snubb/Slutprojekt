@@ -14,11 +14,12 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author me :)
  */
-public class Main extends Canvas implements Runnable{
+public class Singleplayer extends Canvas implements Runnable{
     private final int width = 600; //Dimensions for playing area
     private final int height = 700;
 
     private BufferedImage boom;
+    private BufferedImage aim;
 
     private final Rectangle player = new Rectangle();
 
@@ -39,15 +40,21 @@ public class Main extends Canvas implements Runnable{
 
     int fps = 60;
 
-    public Main() {
+    JFrame frame = new JFrame("Battleship clone");
+
+    public Singleplayer() {
 
         try {
             boom = ImageIO.read(new File("boom.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            aim = ImageIO.read(new File("Crosshair.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        JFrame frame = new JFrame("Battleship clone");
         this.setSize(width,height);
         frame.add(this);
         frame.pack();
@@ -307,7 +314,8 @@ public class Main extends Canvas implements Runnable{
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
-        g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
+        //g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
+        g.drawImage(aim, player.x, player.y, 50, 50, null);
     }
 
     private void drawGrids(Graphics g) { //draws all previously made grids
@@ -330,7 +338,7 @@ public class Main extends Canvas implements Runnable{
 
     public static void main(String[] args) {
         // Här startas ditt program
-        Main painting = new Main();
+        Singleplayer painting = new Singleplayer();
         painting.start();
     }
 

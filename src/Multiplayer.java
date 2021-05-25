@@ -19,17 +19,22 @@ public class Multiplayer extends Canvas implements Runnable{
     private final int height = 700;
 
     private BufferedImage boom;
+    private BufferedImage aim;
 
     private final Rectangle player = new Rectangle();
 
     private int victory = 0;
 
     private int playerPos;
-    private int playerTurn = 1;
+    private int playerTurn = 2;
 
-    boolean boat2 = false;
-    boolean boat3 = false;
-    boolean boat4 = false;
+    boolean boat2_1 = false;
+    boolean boat3_1 = false;
+    boolean boat4_1 = false;
+
+    boolean boat2_2 = false;
+    boolean boat3_2 = false;
+    boolean boat4_2 = false;
 
     public ArrayList<gridSpace1> grids1 = new ArrayList<>();
     public ArrayList<gridSpace1> grids2 = new ArrayList<>();
@@ -40,6 +45,8 @@ public class Multiplayer extends Canvas implements Runnable{
 
     int fps = 60;
 
+    JFrame frame = new JFrame("Battleship clone");
+
     public Multiplayer() {
 
         try {
@@ -48,7 +55,12 @@ public class Multiplayer extends Canvas implements Runnable{
             e.printStackTrace();
         }
 
-        JFrame frame = new JFrame("Battleship clone");
+        try {
+            aim = ImageIO.read(new File("Crosshair.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.setSize(width,height);
         frame.add(this);
         frame.pack();
@@ -65,10 +77,11 @@ public class Multiplayer extends Canvas implements Runnable{
 
         createGrid1();
         createGrid2();
-        createBoats(grids1);
+        createBoats1(grids1);
+        createBoats1(grids2);
     }
 
-    private void createBoats(ArrayList<gridSpace1> grids) { //This shit is way too long but it works and I have other stuff to focus on
+    private void createBoats1(ArrayList<gridSpace1> grids) { //This shit is way too long but it works and I have other stuff to focus on
         int randomNum = ThreadLocalRandom.current().nextInt(0, 63 + 1); //random number that determines boat positions
         int randomDirection = 0; //randomizes direction that boat goes
         int randomVar; // little helper for determining direction
@@ -247,18 +260,20 @@ public class Multiplayer extends Canvas implements Runnable{
 
         g.drawRect(100,100,50*8 + 1,50*8 + 1);
         g.drawRect(800,100,50*8 + 1,50*8 + 1);
-        //g.fillRect(70,100,30,402);
+
         drawGrids1(g);
         drawGrids2(g);
+
         drawPlayerRect(g);
-        drawProgress(g);
+        drawProgress1(g);
+        drawProgress2(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
-
         g.setColor(Color.black);
-
-        g.drawString("PlayerPos: " + playerPos, 30, 70);
-        g.drawString("PlayerX: " + player.x, 160, 70);
-        g.drawString("PlayerY: " + player.y, 300, 70);
+        if (victory == 1) {
+            g.drawString("Player 2 wins!", 600, 70);
+        } else if (victory == 2) {
+            g.drawString("Player 1 wins!", 600, 70);
+        }
 
 
 
@@ -266,13 +281,15 @@ public class Multiplayer extends Canvas implements Runnable{
         bs.show();
     }
 
-    private void drawProgress(Graphics g) {
+    private void drawProgress1(Graphics g) {
+        int victoryProgress = 0;
         g.setColor(new Color(255, 0, 0));
         g.fillRect(100, 510, 100, 50);
-        if (boat2) {
+        if (boat2_1) {
             g.setColor(Color.black);
             g.drawLine(100,510,200,560);
             g.drawLine(100,560,200,510);
+            victoryProgress++;
         } else {
             int destroyed;
             destroyed = 0;
@@ -283,15 +300,16 @@ public class Multiplayer extends Canvas implements Runnable{
             }
             if (destroyed == 2) {
                 System.out.println("YES");
-                boat2 = true;
+                boat2_1 = true;
             }
         }
         g.setColor(new Color(255, 0, 0));
         g.fillRect(210, 510, 150, 50);
-        if (boat3) {
+        if (boat3_1) {
             g.setColor(Color.black);
             g.drawLine(210,510,360,560);
             g.drawLine(210,560,360,510);
+            victoryProgress++;
         } else {
             int destroyed;
             destroyed = 0;
@@ -302,15 +320,16 @@ public class Multiplayer extends Canvas implements Runnable{
             }
             if (destroyed == 3) {
                 System.out.println("YES");
-                boat3 = true;
+                boat3_1 = true;
             }
         }
         g.setColor(new Color(255, 0, 0));
         g.fillRect(100, 570, 200, 50);
-        if (boat4) {
+        if (boat4_1) {
             g.setColor(Color.black);
             g.drawLine(100,570,300,620);
             g.drawLine(100,620,300,570);
+            victoryProgress++;
         } else {
             int destroyed;
             destroyed = 0;
@@ -321,14 +340,85 @@ public class Multiplayer extends Canvas implements Runnable{
             }
             if (destroyed == 4) {
                 System.out.println("YES");
-                boat4 = true;
+                boat4_1 = true;
             }
+        }
+        if (victoryProgress >= 3) {
+            victory = 1;
+        }
+    }
+
+    private void drawProgress2(Graphics g) {
+        int victoryProgress = 0;
+        g.setColor(new Color(255, 0, 0));
+        g.fillRect(1100, 510, 100, 50);
+        if (boat2_2) {
+            g.setColor(Color.black);
+            g.drawLine(1100,510,1200,560);
+            g.drawLine(1100,560,1200,510);
+            victoryProgress++;
+        } else {
+            int destroyed;
+            destroyed = 0;
+            for (int i = 0;i < grids2.toArray().length; i++) {
+                if (grids2.get(i).boatNum == 2 && grids2.get(i).hasBeenHit) {
+                    destroyed++;
+                }
+            }
+            if (destroyed == 2) {
+                System.out.println("YES");
+                boat2_2 = true;
+            }
+        }
+        g.setColor(new Color(255, 0, 0));
+        g.fillRect(940, 510, 150, 50);
+        if (boat3_2) {
+            g.setColor(Color.black);
+            g.drawLine(940,510,1090,560);
+            g.drawLine(940,560,1090,510);
+            victoryProgress++;
+        } else {
+            int destroyed;
+            destroyed = 0;
+            for (int i = 0;i < grids2.toArray().length; i++) {
+                if (grids2.get(i).boatNum == 3 && grids2.get(i).hasBeenHit) {
+                    destroyed++;
+                }
+            }
+            if (destroyed == 3) {
+                System.out.println("YES");
+                boat3_2 = true;
+            }
+        }
+        g.setColor(new Color(255, 0, 0));
+        g.fillRect(1000, 570, 200, 50);
+        if (boat4_2) {
+            g.setColor(Color.black);
+            g.drawLine(1000,570,1200,620);
+            g.drawLine(1000,620,1200,570);
+            victoryProgress++;
+        } else {
+            int destroyed;
+            destroyed = 0;
+            for (int i = 0;i < grids2.toArray().length; i++) {
+                if (grids2.get(i).boatNum == 4 && grids2.get(i).hasBeenHit) {
+                    destroyed++;
+                }
+            }
+            if (destroyed == 4) {
+                System.out.println("YES");
+                boat4_2 = true;
+            }
+        }
+        if (victoryProgress >= 3) {
+            victory = 2;
         }
     }
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
-        g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
+        //g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
+        g.drawImage(aim, player.x, player.y, 50, 50, null);
     }
 
     private void drawGrids1(Graphics g) { //draws all previously made grids
@@ -407,75 +497,77 @@ public class Multiplayer extends Canvas implements Runnable{
     private class KL implements KeyListener {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
-            if (playerTurn == 1) {
-                if (keyEvent.getKeyChar() == 'd') {
-                    if (player.x >= 450) {
-                        playerPos -= 7;
-                    } else {
-                        playerPos++;
+            if (victory == 0) {
+                if (playerTurn == 1) {
+                    if (keyEvent.getKeyChar() == 'l') {
+                        if (player.x >= 450) {
+                            playerPos -= 7;
+                        } else {
+                            playerPos++;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 'a') {
-                    if (player.x <= 150) {
-                        playerPos += 7;
-                    } else {
-                        playerPos--;
+                    if (keyEvent.getKeyChar() == 'j') {
+                        if (player.x <= 150) {
+                            playerPos += 7;
+                        } else {
+                            playerPos--;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 'w') {
-                    if (player.y <= 150) {
-                        playerPos += 56;
-                    } else {
-                        playerPos -= 8;
+                    if (keyEvent.getKeyChar() == 'i') {
+                        if (player.y <= 150) {
+                            playerPos += 56;
+                        } else {
+                            playerPos -= 8;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 's') {
-                    if (player.y >= 450) {
-                        playerPos -= 56;
-                    } else {
-                        playerPos += 8;
+                    if (keyEvent.getKeyChar() == 'k') {
+                        if (player.y >= 450) {
+                            playerPos -= 56;
+                        } else {
+                            playerPos += 8;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 'p') {
-                    for (int i = 0; i < grids1.toArray().length; i++) {
-                        grids1.get(i).hasBoat = false;
+                    if (keyEvent.getKeyChar() == 'p') {
+                        for (int i = 0; i < grids1.toArray().length; i++) {
+                            grids1.get(i).hasBoat = false;
+                        }
+                        createBoats1(grids1);
                     }
-                    createBoats(grids1);
-                }
-            } else {
-                if (keyEvent.getKeyChar() == 'd') {
-                    if (player.x >= 1150) {
-                        playerPos -= 7;
-                    } else {
-                        playerPos++;
+                } else {
+                    if (keyEvent.getKeyChar() == 'd') {
+                        if (player.x >= 1150) {
+                            playerPos -= 7;
+                        } else {
+                            playerPos++;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 'a') {
-                    if (player.x <= 850) {
-                        playerPos += 7;
-                    } else {
-                        playerPos--;
+                    if (keyEvent.getKeyChar() == 'a') {
+                        if (player.x <= 850) {
+                            playerPos += 7;
+                        } else {
+                            playerPos--;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 'w') {
-                    if (player.y <= 150) {
-                        playerPos += 56;
-                    } else {
-                        playerPos -= 8;
+                    if (keyEvent.getKeyChar() == 'w') {
+                        if (player.y <= 150) {
+                            playerPos += 56;
+                        } else {
+                            playerPos -= 8;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 's') {
-                    if (player.y >= 450) {
-                        playerPos -= 56;
-                    } else {
-                        playerPos += 8;
+                    if (keyEvent.getKeyChar() == 's') {
+                        if (player.y >= 450) {
+                            playerPos -= 56;
+                        } else {
+                            playerPos += 8;
+                        }
                     }
-                }
-                if (keyEvent.getKeyChar() == 'p') {
-                    for (int i = 0; i < grids1.toArray().length; i++) {
-                        grids1.get(i).hasBoat = false;
+                    if (keyEvent.getKeyChar() == 'p') {
+                        for (int i = 0; i < grids1.toArray().length; i++) {
+                            grids1.get(i).hasBoat = false;
+                        }
+                        createBoats1(grids1);
                     }
-                    createBoats(grids1);
                 }
             }
             if (keyEvent.getKeyChar() == ' ') {
@@ -509,24 +601,23 @@ public class Multiplayer extends Canvas implements Runnable{
         }
     }
 
-    private void reset() {
+    public void reset() {
         //isRunning = false;
 
         player.x = 100;
         player.y = 100;
         player.width = 54;
         player.height = 54;
-        victory = 0;
 
-        boat2 = false;
-        boat3 = false;
-        boat4 = false;
+        boat2_1 = false;
+        boat3_1 = false;
+        boat4_1 = false;
         for (gridSpace1 grid : grids1) {
             grid.reset();
         }
         grids1.clear();
         createGrid1();
-        createBoats(grids1);
+        createBoats1(grids1);
 
     }
 }
