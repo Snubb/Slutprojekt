@@ -1,8 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 public class Titlescreen extends Canvas implements Runnable{
     private final int width = 1300; //Dimensions for playing area
@@ -11,6 +12,10 @@ public class Titlescreen extends Canvas implements Runnable{
 
     Singleplayer a = new Singleplayer();
     Multiplayer b = new Multiplayer();
+
+    private final Rectangle single = new Rectangle(200,400,300,80);
+    private final Rectangle multi = new Rectangle(700,400,300,80);
+    private final Rectangle mouse = new Rectangle();
 
     private Thread thread;
 
@@ -27,8 +32,14 @@ public class Titlescreen extends Canvas implements Runnable{
         this.addKeyListener(new Titlescreen.KL());
         frame.setVisible(true);
 
+        this.addMouseMotionListener(new MML());
+        this.addMouseListener(new ML());
+
         a.frame.setVisible(false);
         b.frame.setVisible(false);
+
+        mouse.width = 5;
+        mouse.height = 5;
 
         isRunning = false;
     }
@@ -49,7 +60,14 @@ public class Titlescreen extends Canvas implements Runnable{
 
         g.setColor(new Color(246, 44, 68));
         g.setFont(new Font("TimesRoman", Font.PLAIN, 60));
-        g.drawString("TITLESCREEN.TXT", 400, 200);
+        g.drawString("TOTALLY ACCURATE BATTLESHIP CLONE", 25, 100);
+
+        g.setColor(new Color(21, 74, 168));
+        g.fillRect(single.x, single.y, single.width, single.height);
+        g.fillRect(multi.x, multi.y, multi.width, multi.height);
+        g.setColor(new Color(0,0,0));
+        g.drawString("SOLO", single.x + 50, single.y + 60);
+        g.drawString("1v1", multi.x + 90, multi.y + 60);
 
         g.dispose();
         bs.show();
@@ -111,6 +129,55 @@ public class Titlescreen extends Canvas implements Runnable{
         @Override
         public void keyReleased(KeyEvent keyEvent) {
 
+        }
+    }
+    private class ML implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) {
+            if (mouse.intersects(single)) {
+                a.start();
+                a.frame.setVisible(true);
+                frame.setVisible(false);
+            } else if (mouse.intersects(multi)) {
+                b.start();
+                b.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) {
+
+        }
+    }
+    private class MML implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            // Uppdatera rektangeln för muspekaren
+            mouse.x = mouseEvent.getX();
+            mouse.y = mouseEvent.getY();
         }
     }
 }

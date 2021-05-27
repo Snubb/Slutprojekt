@@ -418,7 +418,7 @@ public class Multiplayer extends Canvas implements Runnable{
     private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
         //g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
-        g.drawImage(aim, player.x, player.y, 50, 50, null);
+        g.drawImage(aim, player.x, player.y, 49, 49, null);
     }
 
     private void drawGrids1(Graphics g) { //draws all previously made grids
@@ -612,12 +612,24 @@ public class Multiplayer extends Canvas implements Runnable{
         boat2_1 = false;
         boat3_1 = false;
         boat4_1 = false;
+        boat2_2 = false;
+        boat3_2 = false;
+        boat4_2 = false;
+
+        victory = 0;
+
         for (gridSpace1 grid : grids1) {
             grid.reset();
         }
+        for (gridSpace1 grid : grids2) {
+            grid.reset();
+        }
         grids1.clear();
+        grids2.clear();
         createGrid1();
+        createGrid2();
         createBoats1(grids1);
+        createBoats1(grids2);
 
     }
 }

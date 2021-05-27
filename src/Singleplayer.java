@@ -20,6 +20,7 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private BufferedImage boom;
     private BufferedImage aim;
+    private BufferedImage boat;
 
     private final Rectangle player = new Rectangle();
 
@@ -40,17 +41,16 @@ public class Singleplayer extends Canvas implements Runnable{
 
     int fps = 60;
 
+    private final Rectangle mouse = new Rectangle();
+
     JFrame frame = new JFrame("Battleship clone");
 
     public Singleplayer() {
 
         try {
             boom = ImageIO.read(new File("boom.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             aim = ImageIO.read(new File("Crosshair.png"));
+            boat = ImageIO.read(new File("boat1.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,12 +62,17 @@ public class Singleplayer extends Canvas implements Runnable{
         this.addKeyListener(new KL());
         frame.setVisible(true);
 
+        this.addMouseMotionListener(new Singleplayer.MML());
+        this.addMouseListener(new Singleplayer.ML());
+
         isRunning = false;
 
         player.x = 100;
         player.y = 100;
         player.width = 54;
         player.height = 54;
+        mouse.width = 5;
+        mouse.height = 5;
 
         numOfShots = 30;
 
@@ -254,7 +259,8 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private void drawProgress(Graphics g) {
         g.setColor(new Color(255, 0, 0));
-        g.fillRect(100, 510, 100, 50);
+        g.drawImage(boat, 100, 510, 100, 50, null);
+        //g.fillRect(100, 510, 100, 50);
         if (boat2) {
             g.setColor(Color.black);
             g.drawLine(100,510,200,560);
@@ -273,7 +279,8 @@ public class Singleplayer extends Canvas implements Runnable{
             }
         }
         g.setColor(new Color(255, 0, 0));
-        g.fillRect(210, 510, 150, 50);
+        g.drawImage(boat,210, 510, 150, 50,null);
+        //g.fillRect(210, 510, 150, 50);
         if (boat3) {
             g.setColor(Color.black);
             g.drawLine(210,510,360,560);
@@ -292,7 +299,8 @@ public class Singleplayer extends Canvas implements Runnable{
             }
         }
         g.setColor(new Color(255, 0, 0));
-        g.fillRect(100, 570, 200, 50);
+        g.drawImage(boat, 100, 570, 200, 50, null);
+        //g.fillRect(100, 570, 200, 50);
         if (boat4) {
             g.setColor(Color.black);
             g.drawLine(100,570,300,620);
@@ -321,17 +329,17 @@ public class Singleplayer extends Canvas implements Runnable{
     private void drawGrids(Graphics g) { //draws all previously made grids
         g.setColor(new Color(156,55,8));
         g.fillRect(100,100,-50,500);
-        for (gridSpace1 grid : grids) {
+        for (int i = 0; i < grids.toArray().length; i++) {
             g.setColor(new Color(156, 55, 8));
-            g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
-            if (grid.hasBoat && grid.hasBeenHit || numOfShots == 0 && grid.hasBoat) {
+            g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
+            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit || numOfShots == 0 && grids.get(i).hasBoat) {
                 g.setColor(Color.blue);
-                g.drawImage(boom, grid.Hitbox.x, grid.Hitbox.y, 50, 50, null);
+                g.drawImage(boom, grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50, null);
                 //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
-            } else if (grid.hasBeenHit) {
+            } else if (grids.get(i).hasBeenHit) {
                 g.setColor(Color.black);
-                g.drawLine(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.x + 50, grid.Hitbox.y + 50);
-                g.drawLine(grid.Hitbox.x, grid.Hitbox.y + 50, grid.Hitbox.x + 50, grid.Hitbox.y);
+                g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y + 50);
+                g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y + 50, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y);
             }
         }
     }
@@ -411,18 +419,10 @@ public class Singleplayer extends Canvas implements Runnable{
                 createBoats(grids);
             }
             if (keyEvent.getKeyChar() == ' ') {
-                if (!grids.get(playerPos).hasBeenHit && numOfShots > 0) {
-                    grids.get(playerPos).hit();
-                    numOfShots--;
-                }
-                for (int i = 0;i < grids.toArray().length; i++) {
-                    if (grids.get(i).hasBoat && grids.get(i).hasBeenHit && grids.get(i).score) {
-                        grids.get(i).score();
-                        victory++;
-                    }
-                }
+                shoot();
             }
             if (keyEvent.getKeyChar() == 'r') {
+
                 System.out.println("Restarted");
                 reset();
             }
@@ -439,13 +439,70 @@ public class Singleplayer extends Canvas implements Runnable{
         }
     }
 
+    private void shoot() {
+        if (!grids.get(playerPos).hasBeenHit && numOfShots > 0) {
+            grids.get(playerPos).hit();
+            numOfShots--;
+        }
+        for (int i = 0;i < grids.toArray().length; i++) {
+            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit && grids.get(i).score) {
+                grids.get(i).score();
+                victory++;
+            }
+        }
+    }
+
+    private class ML implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+            shoot();
+        }
+
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) {
+
+        }
+    }
+    private class MML implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            mouse.x = mouseEvent.getX();
+            mouse.y = mouseEvent.getY();
+            for (int i = 0; i < grids.toArray().length; i++) {
+                if (mouse.intersects(grids.get(i).Hitbox)) {
+                    player.x = grids.get(i).Hitbox.x;
+                    player.y = grids.get(i).Hitbox.y;
+                    playerPos = i;
+                }
+            }
+        }
+    }
+
     private void reset() {
         //isRunning = false;
 
-        player.x = 100;
-        player.y = 100;
-        player.width = 54;
-        player.height = 54;
         victory = 0;
 
         numOfShots = 30;
@@ -455,8 +512,6 @@ public class Singleplayer extends Canvas implements Runnable{
         for (gridSpace1 grid : grids) {
             grid.reset();
         }
-        grids.clear();
-        createGrid();
         createBoats(grids);
 
     }
