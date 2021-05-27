@@ -33,13 +33,15 @@ public class Singleplayer extends Canvas implements Runnable{
     boolean boat3 = false;
     boolean boat4 = false;
 
+    boolean boats = true;
+
     public ArrayList<gridSpace1> grids = new ArrayList<>();
 
     private boolean isRunning;
 
     private Thread thread;
 
-    int fps = 60;
+    int fps = 240;
 
     private final Rectangle mouse = new Rectangle();
 
@@ -231,8 +233,17 @@ public class Singleplayer extends Canvas implements Runnable{
         }
         Graphics g = bs.getDrawGraphics();
 
+
+        if (boats) {
+            g.setColor(new Color(255,255,255));
+            g.fillRect(0,0,width,height);
+            g.drawImage(boat, 100, 510, 100, 50, null);
+            g.drawImage(boat,210, 510, 150, 50,null);
+            g.drawImage(boat, 100, 570, 200, 50, null);
+            boats = false;
+        }
         g.setColor(new Color(255,255,255));
-        g.fillRect(0,0,width,height);
+        g.fillRect(100,0,50*8 + 1,50*8 + 101);
 
         g.setColor(new Color(156, 55, 8));
 
@@ -259,7 +270,7 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private void drawProgress(Graphics g) {
         g.setColor(new Color(255, 0, 0));
-        g.drawImage(boat, 100, 510, 100, 50, null);
+        //g.drawImage(boat, 100, 510, 100, 50, null);
         //g.fillRect(100, 510, 100, 50);
         if (boat2) {
             g.setColor(Color.black);
@@ -279,7 +290,7 @@ public class Singleplayer extends Canvas implements Runnable{
             }
         }
         g.setColor(new Color(255, 0, 0));
-        g.drawImage(boat,210, 510, 150, 50,null);
+        //g.drawImage(boat,210, 510, 150, 50,null);
         //g.fillRect(210, 510, 150, 50);
         if (boat3) {
             g.setColor(Color.black);
@@ -299,7 +310,7 @@ public class Singleplayer extends Canvas implements Runnable{
             }
         }
         g.setColor(new Color(255, 0, 0));
-        g.drawImage(boat, 100, 570, 200, 50, null);
+        //g.drawImage(boat, 100, 570, 200, 50, null);
         //g.fillRect(100, 570, 200, 50);
         if (boat4) {
             g.setColor(Color.black);
@@ -502,6 +513,7 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private void reset() {
         //isRunning = false;
+        boats = true;
 
         victory = 0;
 
