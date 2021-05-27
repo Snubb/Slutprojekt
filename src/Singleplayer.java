@@ -222,7 +222,6 @@ public class Singleplayer extends Canvas implements Runnable{
     public void update() { //Updates every frame
         player.x = grids.get(playerPos).getHitbox().x;
         player.y = grids.get(playerPos).getHitbox().y;
-
     }
 
     public void draw() { //draws every frame
@@ -232,7 +231,6 @@ public class Singleplayer extends Canvas implements Runnable{
             return;
         }
         Graphics g = bs.getDrawGraphics();
-
 
         if (boats) {
             g.setColor(new Color(255,255,255));
@@ -248,12 +246,10 @@ public class Singleplayer extends Canvas implements Runnable{
         g.setColor(new Color(156, 55, 8));
 
         g.drawRect(100,100,50*8 + 1,50*8 + 1);
-        //g.fillRect(70,100,30,402);
         drawGrids(g);
         drawPlayerRect(g);
         drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
-
         g.setColor(Color.black);
         g.drawString("Number of shots: " + numOfShots, 30, 30);
         if (victory >= 9) {
@@ -263,16 +259,12 @@ public class Singleplayer extends Canvas implements Runnable{
             g.drawString("You suck!!", 300, 30);
             g.drawString("Press r to restart.", 300, 50);
         }
-
         g.dispose();
         bs.show();
     }
 
-    private void drawProgress(Graphics g) {
-        g.setColor(new Color(255, 0, 0));
-        //g.drawImage(boat, 100, 510, 100, 50, null);
-        //g.fillRect(100, 510, 100, 50);
-        if (boat2) {
+    private void drawProgress(Graphics g) { //Handles the boats below the playing field to show if a boat is destroyed
+        if (boat2) { //true if boat is destroyed
             g.setColor(Color.black);
             g.drawLine(100,510,200,560);
             g.drawLine(100,560,200,510);
@@ -289,9 +281,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 boat2 = true;
             }
         }
-        g.setColor(new Color(255, 0, 0));
-        //g.drawImage(boat,210, 510, 150, 50,null);
-        //g.fillRect(210, 510, 150, 50);
         if (boat3) {
             g.setColor(Color.black);
             g.drawLine(210,510,360,560);
@@ -309,9 +298,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 boat3 = true;
             }
         }
-        g.setColor(new Color(255, 0, 0));
-        //g.drawImage(boat, 100, 570, 200, 50, null);
-        //g.fillRect(100, 570, 200, 50);
         if (boat4) {
             g.setColor(Color.black);
             g.drawLine(100,570,300,620);
@@ -333,7 +319,6 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private void drawPlayerRect(Graphics g) { //Handles the red player box
         g.setColor(new Color(255, 0, 0));
-        //g.drawRect(player.x - 3, player.y - 3, player.width +1, player.height +1);
         g.drawImage(aim, player.x, player.y, 50, 50, null);
     }
 
@@ -343,11 +328,10 @@ public class Singleplayer extends Canvas implements Runnable{
         for (int i = 0; i < grids.toArray().length; i++) {
             g.setColor(new Color(156, 55, 8));
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
-            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit || numOfShots == 0 && grids.get(i).hasBoat) {
+            if (grids.get(i).hasBoat && grids.get(i).hasBeenHit || numOfShots == 0 && grids.get(i).hasBoat) { //handles explosion if there is a boat there
                 g.setColor(Color.blue);
                 g.drawImage(boom, grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50, null);
-                //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
-            } else if (grids.get(i).hasBeenHit) {
+            } else if (grids.get(i).hasBeenHit) { //Draws an x if there is no boat
                 g.setColor(Color.black);
                 g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y + 50);
                 g.drawLine(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y + 50, grids.get(i).Hitbox.x + 50, grids.get(i).Hitbox.y);
@@ -433,24 +417,18 @@ public class Singleplayer extends Canvas implements Runnable{
                 shoot();
             }
             if (keyEvent.getKeyChar() == 'r') {
-
                 System.out.println("Restarted");
                 reset();
             }
         }
 
         @Override
-        public void keyPressed(KeyEvent keyEvent) {
-
-        }
-
+        public void keyPressed(KeyEvent keyEvent) { }
         @Override
-        public void keyReleased(KeyEvent keyEvent) {
-
-        }
+        public void keyReleased(KeyEvent keyEvent) { }
     }
 
-    private void shoot() {
+    private void shoot() { //Handles shooting
         if (!grids.get(playerPos).hasBeenHit && numOfShots > 0) {
             grids.get(playerPos).hit();
             numOfShots--;
@@ -471,31 +449,17 @@ public class Singleplayer extends Canvas implements Runnable{
         }
 
         @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-
-        }
-
+        public void mousePressed(MouseEvent mouseEvent) { }
         @Override
-        public void mouseReleased(MouseEvent mouseEvent) {
-
-        }
-
+        public void mouseReleased(MouseEvent mouseEvent) { }
         @Override
-        public void mouseEntered(MouseEvent mouseEvent) {
-
-        }
-
+        public void mouseEntered(MouseEvent mouseEvent) { }
         @Override
-        public void mouseExited(MouseEvent mouseEvent) {
-
-        }
+        public void mouseExited(MouseEvent mouseEvent) { }
     }
     private class MML implements MouseMotionListener {
-
         @Override
-        public void mouseDragged(MouseEvent mouseEvent) {
-
-        }
+        public void mouseDragged(MouseEvent mouseEvent) { }
 
         @Override
         public void mouseMoved(MouseEvent mouseEvent) {
@@ -511,12 +475,9 @@ public class Singleplayer extends Canvas implements Runnable{
         }
     }
 
-    private void reset() {
-        //isRunning = false;
+    private void reset() { //Resets a bunch of variables to "reset" the game
         boats = true;
-
         victory = 0;
-
         numOfShots = 30;
         boat2 = false;
         boat3 = false;
@@ -525,6 +486,5 @@ public class Singleplayer extends Canvas implements Runnable{
             grid.reset();
         }
         createBoats(grids);
-
     }
 }
