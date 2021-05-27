@@ -41,7 +41,7 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private Thread thread;
 
-    int fps = 240;
+    int fps = 60;
 
     private final Rectangle mouse = new Rectangle();
 
