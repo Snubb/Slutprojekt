@@ -22,6 +22,9 @@ public class Multiplayer extends Canvas implements Runnable{
     private BufferedImage aim;
 
     private final Rectangle player = new Rectangle();
+    private final Rectangle title = new Rectangle(100, 50);
+    private final Rectangle mouse = new Rectangle(5, 5);
+
 
     private int victory = 0;
 
@@ -67,6 +70,9 @@ public class Multiplayer extends Canvas implements Runnable{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.addKeyListener(new KL());
         frame.setVisible(true);
+
+        this.addMouseMotionListener(new Multiplayer.MML());
+        this.addMouseListener(new Multiplayer.ML());
 
         isRunning = false;
 
@@ -260,6 +266,12 @@ public class Multiplayer extends Canvas implements Runnable{
 
         g.drawRect(100,100,50*8 + 1,50*8 + 1);
         g.drawRect(800,100,50*8 + 1,50*8 + 1);
+
+        g.setColor(new Color(210, 101, 13));
+        g.fillRect(0, 0, title.width, title.height);
+        g.setColor(new Color(0,0,0));
+        g.setFont(new Font("Serif", Font.BOLD, 42));
+        g.drawString("Back", 2, 35);
 
         drawGrids1(g);
         drawGrids2(g);
@@ -598,6 +610,38 @@ public class Multiplayer extends Canvas implements Runnable{
         @Override
         public void keyReleased(KeyEvent keyEvent) {
 
+        }
+    }
+
+    private class ML implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+            if (mouse.intersects(title)) {
+                Titlescreen c = new Titlescreen();
+                c.start();
+                c.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) { }
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) { }
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) { }
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) { }
+    }
+    private class MML implements MouseMotionListener {
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) { }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+            mouse.x = mouseEvent.getX();
+            mouse.y = mouseEvent.getY();
         }
     }
 
