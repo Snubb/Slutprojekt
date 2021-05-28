@@ -23,6 +23,7 @@ public class Singleplayer extends Canvas implements Runnable{
     private BufferedImage boat;
 
     private final Rectangle player = new Rectangle();
+    private final Rectangle title = new Rectangle(100, 50);
 
     private int victory = 0;
 
@@ -243,6 +244,12 @@ public class Singleplayer extends Canvas implements Runnable{
         g.setColor(new Color(255,255,255));
         g.fillRect(100,0,50*8 + 1,50*8 + 101);
 
+        g.setColor(new Color(210, 101, 13));
+        g.fillRect(0, 0, title.width, title.height);
+        g.setColor(new Color(0,0,0));
+        g.setFont(new Font("Serif", Font.BOLD, 42));
+        g.drawString("Back", 2, 35);
+
         g.setColor(new Color(156, 55, 8));
 
         g.drawRect(100,100,50*8 + 1,50*8 + 1);
@@ -251,7 +258,7 @@ public class Singleplayer extends Canvas implements Runnable{
         drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
         g.setColor(Color.black);
-        g.drawString("Number of shots: " + numOfShots, 30, 30);
+        g.drawString("Number of shots: " + numOfShots, 30, 80);
         if (victory >= 9) {
             g.drawString("Congratulations!!", 300, 30);
             g.drawString("Press r to restart.", 300, 50);
@@ -444,12 +451,18 @@ public class Singleplayer extends Canvas implements Runnable{
     private class ML implements MouseListener {
 
         @Override
-        public void mouseClicked(MouseEvent mouseEvent) {
-            shoot();
-        }
+        public void mouseClicked(MouseEvent mouseEvent) { }
 
         @Override
-        public void mousePressed(MouseEvent mouseEvent) { }
+        public void mousePressed(MouseEvent mouseEvent) {
+            if (mouse.intersects(title)) {
+                Titlescreen c = new Titlescreen();
+                c.start();
+                c.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+            shoot();
+        }
         @Override
         public void mouseReleased(MouseEvent mouseEvent) { }
         @Override
