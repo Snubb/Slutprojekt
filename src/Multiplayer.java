@@ -434,8 +434,6 @@ public class Multiplayer extends Canvas implements Runnable{
     }
 
     private void drawGrids1(Graphics g) { //draws all previously made grids
-        g.setColor(new Color(156,55,8));
-        g.fillRect(100,100,-50,500);
         for (gridSpace1 grid : grids1) {
             g.setColor(new Color(156, 55, 8));
             g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);

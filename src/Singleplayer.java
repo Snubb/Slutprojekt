@@ -233,14 +233,14 @@ public class Singleplayer extends Canvas implements Runnable{
         }
         Graphics g = bs.getDrawGraphics();
 
-        if (boats) {
+        //if (boats) {
             g.setColor(new Color(255,255,255));
             g.fillRect(0,0,width,height);
             g.drawImage(boat, 100, 510, 100, 50, null);
             g.drawImage(boat,210, 510, 150, 50,null);
             g.drawImage(boat, 100, 570, 200, 50, null);
             boats = false;
-        }
+        //}
         g.setColor(new Color(255,255,255));
         g.fillRect(100,0,50*8 + 1,50*8 + 101);
 
@@ -330,8 +330,6 @@ public class Singleplayer extends Canvas implements Runnable{
     }
 
     private void drawGrids(Graphics g) { //draws all previously made grids
-        g.setColor(new Color(156,55,8));
-        g.fillRect(100,100,-50,500);
         for (int i = 0; i < grids.toArray().length; i++) {
             g.setColor(new Color(156, 55, 8));
             g.drawRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, grids.get(i).Hitbox.width, grids.get(i).Hitbox.height);
