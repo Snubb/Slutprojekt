@@ -72,11 +72,29 @@ skulle ritas över rektangeln till att börja med.
 
 Här beskriver du vad som har gått bra i ditt projekt och analyserar varför. Hur ska du upprepa framgångarna.
 
+Jag skulle säga att nästan allt gick väldigt bra, jag har löst det mesta som jag ville i programmet och
+det som inte blivit löst är mest för tidsbrist. Samtidigt är battleships inte alldelles för komplicerat 
+vilket förmodligen bidrar till varför det gick så bra som det gjorde.
 
 
 ## Negativa erfarenheter
 
 Här beskriver du det som du anser har gått mindre bra med ditt projekt och analyserar hur du kan undvika detta i framtida projekt.
+
+Som sagt gick inte någonting alldelles för dåligt.  
+Det enda som gick "dåligt" är att vissa saker skulle kunna lösas på ett bättre sätt, specifikt två saker.
+Först så hade jag metoden "creatBoats" som skapade båtarna och såg till att dom inte overlappade eller gick 
+utanför banan. Metoden fungerar precis som den ska men den är nog alldelles för lång och överkomplicerad.
+Jag kan tänka mig lite bättre sätt, t.ex att göra hela båten som en lång rektangel och sedan kolla intersect 
+mellant dom men det jag har nu fungerar och jag orkar inte skriva om hela saken.
+
+Den andra grejen är hur jag fixade till titlescreenen. Just nu har jag tre separata java program, en för 
+titlescreen, en för 1v1 och en för singeplayer och allting körs igenom titlescreen genom att helt enkelt sätta 
+frame.setVisible till false eller true beroende på vad som ska köras. Det skulle nog absolut gå att köra 
+allting från en och samma java fil men då skulle jag behöva skriva om stora delar av den. 
+Ett sätt att undvika det är att helt enkelt planera bättre. Nu så skrev och först bara singleplayer 
+och skrev titlescreenen och 1v1 som en eftertanke men om jag planerade alltihop från första början skulle 
+det nog blivit bättre.
 
 ## Sammanfattning
 
