@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,13 +52,17 @@ public class Multiplayer extends Canvas implements Runnable{
     public Multiplayer() {
 
         try {
-            boom = ImageIO.read(new File("boom.png"));
+            //boom = ImageIO.read(new File("images/boom.png"));
+
+            boom = ImageIO.read(getClass().getResourceAsStream("images/boom.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            aim = ImageIO.read(new File("Crosshair.png"));
+            //aim = ImageIO.read(new File("images/Crosshair.png"));
+
+            aim = ImageIO.read(getClass().getResourceAsStream("images/Crosshair.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
