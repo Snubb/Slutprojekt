@@ -41,7 +41,7 @@ public class Singleplayer extends Canvas implements Runnable{
 
     private Thread thread;
 
-    int fps = 60;
+    int fps = 20;
 
     private final Rectangle mouse = new Rectangle();
 
@@ -50,11 +50,8 @@ public class Singleplayer extends Canvas implements Runnable{
     public Singleplayer() {
 
         try {
-            //boom = ImageIO.read(new File("images/boom.png"));
             boom = ImageIO.read(getClass().getResourceAsStream("images/boom.png"));
-            //aim = ImageIO.read(new File("images/Crosshair.png"));
             aim = ImageIO.read(getClass().getResourceAsStream("images/Crosshair.png"));
-            //boat = ImageIO.read(new File("images/boat1.png"));
             boat = ImageIO.read(getClass().getResourceAsStream("images/boat1.png"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -235,14 +232,12 @@ public class Singleplayer extends Canvas implements Runnable{
         }
         Graphics g = bs.getDrawGraphics();
 
-        //if (boats) {
-            g.setColor(new Color(255,255,255));
-            g.fillRect(0,0,width,height);
-            g.drawImage(boat, 100, 510, 100, 50, null);
-            g.drawImage(boat,210, 510, 150, 50,null);
-            g.drawImage(boat, 100, 570, 200, 50, null);
-            boats = false;
-        //}
+        g.setColor(new Color(255,255,255));
+        g.fillRect(0,0,width,height);
+        g.drawImage(boat, 100, 510, 100, 50, null);
+        g.drawImage(boat,210, 510, 150, 50,null);
+        g.drawImage(boat, 100, 570, 200, 50, null);
+
         g.setColor(new Color(255,255,255));
         g.fillRect(100,0,50*8 + 1,50*8 + 101);
 
@@ -286,7 +281,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 }
             }
             if (destroyed == 2) {
-                System.out.println("YES");
                 boat2 = true;
             }
         }
@@ -303,7 +297,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 }
             }
             if (destroyed == 3) {
-                System.out.println("YES");
                 boat3 = true;
             }
         }
@@ -320,7 +313,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 }
             }
             if (destroyed == 4) {
-                System.out.println("YES");
                 boat4 = true;
             }
         }
@@ -386,45 +378,38 @@ public class Singleplayer extends Canvas implements Runnable{
     private class KL implements KeyListener {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
-            if (keyEvent.getKeyChar() == 'd') {
+            if (keyEvent.getKeyChar() == 'd' || keyEvent.getKeyChar() == 'D') {
                 if (player.x >= 450) {
                     playerPos -= 7;
                 } else {
                     playerPos++;
                 }
             }
-            if (keyEvent.getKeyChar() == 'a') {
+            if (keyEvent.getKeyChar() == 'a' || keyEvent.getKeyChar() == 'A') {
                 if (player.x <= 150) {
                     playerPos += 7;
                 } else {
                     playerPos--;
                 }
             }
-            if (keyEvent.getKeyChar() == 'w') {
+            if (keyEvent.getKeyChar() == 'w' || keyEvent.getKeyChar() == 'W') {
                 if (player.y <= 150) {
                     playerPos += 56;
                 } else {
                     playerPos -= 8;
                 }
             }
-            if (keyEvent.getKeyChar() == 's') {
+            if (keyEvent.getKeyChar() == 's' || keyEvent.getKeyChar() == 'S') {
                 if (player.y >= 450) {
                     playerPos -= 56;
                 } else {
                     playerPos += 8;
                 }
             }
-            if (keyEvent.getKeyChar() == 'p') {
-                for (int i = 0; i < grids.toArray().length; i++) {
-                    grids.get(i).hasBoat = false;
-                }
-                createBoats(grids);
-            }
             if (keyEvent.getKeyChar() == ' ') {
                 shoot();
             }
-            if (keyEvent.getKeyChar() == 'r') {
-                System.out.println("Restarted");
+            if (keyEvent.getKeyChar() == 'r' || keyEvent.getKeyChar() == 'R') {
                 reset();
             }
         }
