@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author me :)
  */
 public class Singleplayer extends Canvas implements Runnable{
-    private final int width = 600; //Dimensions for playing area
+    private final int width = 750; //Dimensions for playing area
     private final int height = 700;
 
     private BufferedImage boom;
@@ -36,6 +36,8 @@ public class Singleplayer extends Canvas implements Runnable{
     boolean boats = true;
 
     public ArrayList<gridSpace1> grids = new ArrayList<>();
+
+    public ArrayList<Rectangle> shots = new ArrayList(); //Handles the displayed number of shots
 
     private boolean isRunning;
 
@@ -77,6 +79,17 @@ public class Singleplayer extends Canvas implements Runnable{
         mouse.height = 5;
 
         numOfShots = 30;
+
+        int shotPosX = 500;
+        int shotPosY = 100;
+        for (int i = 0; i <= numOfShots; i++) {
+            shots.add(new Rectangle(shotPosX + 5, shotPosY + 5, 40, 40));
+            shotPosY += 50;
+            if (shotPosY > 450) {
+                shotPosX += 50;
+                shotPosY = 100;
+            }
+        }
 
         createGrid();
         createBoats(grids);
@@ -241,6 +254,11 @@ public class Singleplayer extends Canvas implements Runnable{
         g.setColor(new Color(255,255,255));
         g.fillRect(100,0,50*8 + 1,50*8 + 101);
 
+        g.setColor(new Color(255,50,50));
+        for (int i = 0; i < numOfShots; i++) {
+            g.fillOval(shots.get(i).x, shots.get(i).y, shots.get(i).height, shots.get(i).width);
+        }
+
         g.setColor(new Color(210, 101, 13));
         g.fillRect(0, 0, title.width, title.height);
         g.setColor(new Color(0,0,0));
@@ -255,7 +273,6 @@ public class Singleplayer extends Canvas implements Runnable{
         drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
         g.setColor(Color.black);
-        g.drawString("Number of shots: " + numOfShots, 30, 80);
         if (victory >= 9) {
             g.drawString("Congratulations!!", 300, 30);
             g.drawString("Press r to restart.", 300, 50);
