@@ -96,6 +96,15 @@ Ett sätt att undvika det är att helt enkelt planera bättre. Nu så skrev och 
 och skrev titlescreenen och 1v1 som en eftertanke men om jag planerade alltihop från första början skulle 
 det nog blivit bättre.
 
+En annan sak som gick mindre bra är hur stabilt/laggfritt spelet är. Det största problemet 
+var gällande båtbilderna som visar vilka som sprängts. Eftersom spelet ritar om allting 
+varje frame börjar det lagga när jag har stora bilder. Jag löste det först genom att göra 
+så att bilderna specifikt bara ritades när de behövdes men då dog spelet på min pc men 
+fungerade fint på laptop. I slutändan så tog jag smällen och lät det fungera på båda 
+enheterna men med smått lagg på laptopen.
+Det här skulle kanske fungera fint om jag skrivit om programmet på det nya sättet som 
+du visade med bättre prestanda och fullscreen.
+
 ## Sammanfattning
 
 Här redovisar du dina slutsatser, erfarenheter och lärdomar. Reflektera över din produkt och dess/dina utvecklingsmöjligheter.

@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author me :)
  */
 public class Singleplayer extends Canvas implements Runnable{
-    private final int width = 600; //Dimensions for playing area
+    private final int width = 750; //Dimensions for playing area
     private final int height = 700;
 
     private BufferedImage boom;
@@ -37,12 +37,13 @@ public class Singleplayer extends Canvas implements Runnable{
 
     public ArrayList<gridSpace1> grids = new ArrayList<>();
 
+    public ArrayList<Rectangle> shots = new ArrayList<>(); //Handles the displayed number of shots
+
     private boolean isRunning;
 
     private Thread thread;
 
-    int fps = 60;
-
+    int fps = 30;
     private final Rectangle mouse = new Rectangle();
 
     JFrame frame = new JFrame("Battleship clone");
@@ -50,11 +51,8 @@ public class Singleplayer extends Canvas implements Runnable{
     public Singleplayer() {
 
         try {
-            //boom = ImageIO.read(new File("images/boom.png"));
             boom = ImageIO.read(getClass().getResourceAsStream("images/boom.png"));
-            //aim = ImageIO.read(new File("images/Crosshair.png"));
             aim = ImageIO.read(getClass().getResourceAsStream("images/Crosshair.png"));
-            //boat = ImageIO.read(new File("images/boat1.png"));
             boat = ImageIO.read(getClass().getResourceAsStream("images/boat1.png"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,6 +78,17 @@ public class Singleplayer extends Canvas implements Runnable{
         mouse.height = 5;
 
         numOfShots = 30;
+
+        int shotPosX = 500;
+        int shotPosY = 100;
+        for (int i = 0; i <= numOfShots; i++) {
+            shots.add(new Rectangle(shotPosX + 5, shotPosY + 5, 40, 40));
+            shotPosY += 50;
+            if (shotPosY > 450) {
+                shotPosX += 50;
+                shotPosY = 100;
+            }
+        }
 
         createGrid();
         createBoats(grids);
@@ -235,16 +244,19 @@ public class Singleplayer extends Canvas implements Runnable{
         }
         Graphics g = bs.getDrawGraphics();
 
-        //if (boats) {
-            g.setColor(new Color(255,255,255));
-            g.fillRect(0,0,width,height);
-            g.drawImage(boat, 100, 510, 100, 50, null);
-            g.drawImage(boat,210, 510, 150, 50,null);
-            g.drawImage(boat, 100, 570, 200, 50, null);
-            boats = false;
-        //}
+        g.setColor(new Color(255,255,255));
+        g.fillRect(0,0,width,height);
+        g.drawImage(boat, 100, 510, 100, 50, null);
+        g.drawImage(boat,210, 510, 150, 50,null);
+        g.drawImage(boat, 100, 570, 200, 50, null);
+
         g.setColor(new Color(255,255,255));
         g.fillRect(100,0,50*8 + 1,50*8 + 101);
+
+        g.setColor(new Color(255,50,50));
+        for (int i = 0; i < numOfShots; i++) {
+            g.fillOval(shots.get(i).x, shots.get(i).y, shots.get(i).height, shots.get(i).width);
+        }
 
         g.setColor(new Color(210, 101, 13));
         g.fillRect(0, 0, title.width, title.height);
@@ -260,7 +272,6 @@ public class Singleplayer extends Canvas implements Runnable{
         drawProgress(g);
         g.setFont(new Font("Serif", Font.BOLD, 24));
         g.setColor(Color.black);
-        g.drawString("Number of shots: " + numOfShots, 30, 80);
         if (victory >= 9) {
             g.drawString("Congratulations!!", 300, 30);
             g.drawString("Press r to restart.", 300, 50);
@@ -286,7 +297,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 }
             }
             if (destroyed == 2) {
-                System.out.println("YES");
                 boat2 = true;
             }
         }
@@ -303,7 +313,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 }
             }
             if (destroyed == 3) {
-                System.out.println("YES");
                 boat3 = true;
             }
         }
@@ -320,7 +329,6 @@ public class Singleplayer extends Canvas implements Runnable{
                 }
             }
             if (destroyed == 4) {
-                System.out.println("YES");
                 boat4 = true;
             }
         }
@@ -386,45 +394,38 @@ public class Singleplayer extends Canvas implements Runnable{
     private class KL implements KeyListener {
         @Override
         public void keyTyped(KeyEvent keyEvent) {
-            if (keyEvent.getKeyChar() == 'd') {
+            if (keyEvent.getKeyChar() == 'd' || keyEvent.getKeyChar() == 'D') {
                 if (player.x >= 450) {
                     playerPos -= 7;
                 } else {
                     playerPos++;
                 }
             }
-            if (keyEvent.getKeyChar() == 'a') {
+            if (keyEvent.getKeyChar() == 'a' || keyEvent.getKeyChar() == 'A') {
                 if (player.x <= 150) {
                     playerPos += 7;
                 } else {
                     playerPos--;
                 }
             }
-            if (keyEvent.getKeyChar() == 'w') {
+            if (keyEvent.getKeyChar() == 'w' || keyEvent.getKeyChar() == 'W') {
                 if (player.y <= 150) {
                     playerPos += 56;
                 } else {
                     playerPos -= 8;
                 }
             }
-            if (keyEvent.getKeyChar() == 's') {
+            if (keyEvent.getKeyChar() == 's' || keyEvent.getKeyChar() == 'S') {
                 if (player.y >= 450) {
                     playerPos -= 56;
                 } else {
                     playerPos += 8;
                 }
             }
-            if (keyEvent.getKeyChar() == 'p') {
-                for (int i = 0; i < grids.toArray().length; i++) {
-                    grids.get(i).hasBoat = false;
-                }
-                createBoats(grids);
-            }
             if (keyEvent.getKeyChar() == ' ') {
                 shoot();
             }
-            if (keyEvent.getKeyChar() == 'r') {
-                System.out.println("Restarted");
+            if (keyEvent.getKeyChar() == 'r' || keyEvent.getKeyChar() == 'R') {
                 reset();
             }
         }
@@ -473,7 +474,6 @@ public class Singleplayer extends Canvas implements Runnable{
     private class MML implements MouseMotionListener {
         @Override
         public void mouseDragged(MouseEvent mouseEvent) { }
-
         @Override
         public void mouseMoved(MouseEvent mouseEvent) {
             mouse.x = mouseEvent.getX();
