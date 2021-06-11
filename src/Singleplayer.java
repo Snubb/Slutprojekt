@@ -37,14 +37,13 @@ public class Singleplayer extends Canvas implements Runnable{
 
     public ArrayList<gridSpace1> grids = new ArrayList<>();
 
-    public ArrayList<Rectangle> shots = new ArrayList(); //Handles the displayed number of shots
+    public ArrayList<Rectangle> shots = new ArrayList<>(); //Handles the displayed number of shots
 
     private boolean isRunning;
 
     private Thread thread;
 
-    int fps = 20;
-
+    int fps = 30;
     private final Rectangle mouse = new Rectangle();
 
     JFrame frame = new JFrame("Battleship clone");
@@ -475,7 +474,6 @@ public class Singleplayer extends Canvas implements Runnable{
     private class MML implements MouseMotionListener {
         @Override
         public void mouseDragged(MouseEvent mouseEvent) { }
-
         @Override
         public void mouseMoved(MouseEvent mouseEvent) {
             mouse.x = mouseEvent.getX();

@@ -439,7 +439,7 @@ public class Multiplayer extends Canvas implements Runnable{
         for (gridSpace1 grid : grids1) {
             g.setColor(new Color(156, 55, 8));
             g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
-            if (grid.hasBoat && grid.hasBeenHit) {
+            if (grid.hasBoat && grid.hasBeenHit || grid.hasBoat && victory > 0) {
                 g.setColor(Color.blue);
                 g.drawImage(boom, grid.Hitbox.x, grid.Hitbox.y, 50, 50, null);
                 //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
@@ -457,7 +457,7 @@ public class Multiplayer extends Canvas implements Runnable{
         for (gridSpace1 grid : grids2) {
             g.setColor(new Color(156, 55, 8));
             g.drawRect(grid.Hitbox.x, grid.Hitbox.y, grid.Hitbox.width, grid.Hitbox.height);
-            if (grid.hasBoat && grid.hasBeenHit) {
+            if (grid.hasBoat && grid.hasBeenHit || grid.hasBoat && victory > 0) {
                 g.setColor(Color.blue);
                 g.drawImage(boom, grid.Hitbox.x, grid.Hitbox.y, 50, 50, null);
                 //g.fillRect(grids.get(i).Hitbox.x, grids.get(i).Hitbox.y, 50, 50);
@@ -511,44 +511,15 @@ public class Multiplayer extends Canvas implements Runnable{
         public void keyTyped(KeyEvent keyEvent) {
             if (victory == 0) {
                 if (playerTurn == 1) {
-                    if (keyEvent.getKeyChar() == 'l' || keyEvent.getKeyChar() == 'L') {
+                    if (keyEvent.getKeyChar() == 'd' || keyEvent.getKeyChar() == 'D') {
                         if (player.x >= 450) {
                             playerPos -= 7;
                         } else {
                             playerPos++;
                         }
                     }
-                    if (keyEvent.getKeyChar() == 'j' || keyEvent.getKeyChar() == 'J') {
-                        if (player.x <= 150) {
-                            playerPos += 7;
-                        } else {
-                            playerPos--;
-                        }
-                    }
-                    if (keyEvent.getKeyChar() == 'i' || keyEvent.getKeyChar() == 'I') {
-                        if (player.y <= 150) {
-                            playerPos += 56;
-                        } else {
-                            playerPos -= 8;
-                        }
-                    }
-                    if (keyEvent.getKeyChar() == 'k' || keyEvent.getKeyChar() == 'K') {
-                        if (player.y >= 450) {
-                            playerPos -= 56;
-                        } else {
-                            playerPos += 8;
-                        }
-                    }
-                } else {
-                    if (keyEvent.getKeyChar() == 'd' || keyEvent.getKeyChar() == 'D') {
-                        if (player.x >= 1150) {
-                            playerPos -= 7;
-                        } else {
-                            playerPos++;
-                        }
-                    }
                     if (keyEvent.getKeyChar() == 'a' || keyEvent.getKeyChar() == 'A') {
-                        if (player.x <= 850) {
+                        if (player.x <= 150) {
                             playerPos += 7;
                         } else {
                             playerPos--;
@@ -568,18 +539,49 @@ public class Multiplayer extends Canvas implements Runnable{
                             playerPos += 8;
                         }
                     }
+                } else {
+                    if (keyEvent.getKeyChar() == 'l' || keyEvent.getKeyChar() == 'L') {
+                        if (player.x >= 1150) {
+                            playerPos -= 7;
+                        } else {
+                            playerPos++;
+                        }
+                    }
+                    if (keyEvent.getKeyChar() == 'j' || keyEvent.getKeyChar() == 'J') {
+                        if (player.x <= 850) {
+                            playerPos += 7;
+                        } else {
+                            playerPos--;
+                        }
+                    }
+                    if (keyEvent.getKeyChar() == 'i' || keyEvent.getKeyChar() == 'I') {
+                        if (player.y <= 150) {
+                            playerPos += 56;
+                        } else {
+                            playerPos -= 8;
+                        }
+                    }
+                    if (keyEvent.getKeyChar() == 'k' || keyEvent.getKeyChar() == 'K') {
+                        if (player.y >= 450) {
+                            playerPos -= 56;
+                        } else {
+                            playerPos += 8;
+                        }
+                    }
                 }
             }
             if (keyEvent.getKeyChar() == ' ') {
-                if (playerTurn == 1) {
-                    if (!grids1.get(playerPos).hasBeenHit) {
-                        grids1.get(playerPos).hit();
-                        playerTurn = 2;
-                    }
-                } else {
-                    if (!grids2.get(playerPos).hasBeenHit) {
-                        grids2.get(playerPos).hit();
-                        playerTurn = 1;
+                if (victory == 0) {
+                    if (playerTurn == 1) {
+                        if (!grids1.get(playerPos).hasBeenHit) {
+                            grids1.get(playerPos).hit();
+                            playerTurn = 2;
+                        }
+                    } else {
+                        if (!grids2.get(playerPos).hasBeenHit) {
+                            grids2.get(playerPos).hit();
+                            playerTurn = 1;
+                        }
                     }
                 }
 
